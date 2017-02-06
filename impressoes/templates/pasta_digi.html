@@ -1,0 +1,92 @@
+<meta charset="UTF-8"/>
+{% extends "base.html" %}
+{% load impressoras_extras %}
+{% load staticfiles %}
+{% load pagination_tags %}
+{%block titulo%}{{title}}{%endblock%}
+
+{%block top%}
+	{% if request.session.nome%}
+			<h1>{{request.session.nome}}</h1>
+			<a href="/jasmine/logout/"><h2>Sair</h2></a>
+		{%endif%}
+{%endblock%}
+
+{%block menu%}
+	{% if not request.session.userl %}
+		<meta http-equiv="refresh" content="0; url=/jasmine/login/">
+	{%else%}
+		{% if request.session.menu%}
+			{%for item in request.session.menu%}
+				{% if item == 'ADMINISTRAÇÃO' %}
+					<li>
+						<div class="dropdown-menu">
+							<a href="/{{ request.session.url|get_at_index:forloop.counter0 }}">
+								<div class="item-menu-selec">
+									<img src="{% static 'images/'%}{{request.session.img|get_at_index:forloop.counter0}}"  alt="" />
+									<p>{{item}}</p>							
+								</div>
+							</a>
+							<div class="dropdown-content-menu">
+								<div class="dropdown-content-item-menu"><img src="{% static 'images/admin24.png' %}"><a onclick="mostrar('modal_fullscreen')" href="/jasmine/admin/digi">Conf. de Digitalizações</a></div>
+								<div class="dropdown-content-item-menu"><img src="{% static 'images/admin24.png' %}"><a onclick="mostrar('modal_fullscreen')" href="/jasmine/admin/ad">Conf. do Active Directory</a></div>
+								<div class="dropdown-content-item-menu"><img src="{% static 'images/admin24.png' %}"><a onclick="mostrar('modal_fullscreen')" href="/jasmine/admin/tutoriais/add">Criar Tutorial</a></div>
+								<div class="dropdown-content-item-menu"><img src="{% static 'images/admin24.png' %}"><a onclick="mostrar('modal_fullscreen')" href="/jasmine/viewlogs/*user*/*action*/*host*/">Visualizador de Logs</a></div>
+							</div>
+						</div>
+					</li>
+				{%else%}
+					<li> 
+						<a href="/{{ request.session.url|get_at_index:forloop.counter0 }}">
+							<div class="item-menu">
+								<img src="{% static 'images/'%}{{request.session.img|get_at_index:forloop.counter0}}"  alt="" />
+								<p>{{item}}</p>
+							</div>
+						</a>
+					</li>
+				{%endif%}
+			{%endfor%}
+		{%endif%}
+	{%endif%}
+{%endblock%}
+
+{%block conteudo%}
+	{% if not request.session.userl %}
+		<meta http-equiv="refresh" content="0; url=/login/">
+	{%else%}
+		<div class="cartao">
+			<img src="{% static 'images/nuvemrede.png' %}" alt="" width="70"/>
+			<h1>Configuração de Digitalizações</h1>
+			<br>
+			<div class="navegation_bar">
+				<a href="/jasmine/admin/">Administração</a>
+				<a href="/jasmine/admin/digi">Digitalizações</a>
+			</div>
+			<br>
+			<div class="formulario">
+				<form method="post" action="/jasmine/admin/digi/"> {%csrf_token%}
+			 		{{form.as_p}}
+				   	<p><input type="submit" name="commit" value="Salvar" id="botao" ></p>
+				</form>
+			</div>
+		</div>
+		
+		<div class="snackbar">
+			{%if msg%}
+				<div id="snackbar">
+					{% if image_snack %}
+						<img src="{% static 'images/'%}{{image_snack}}">
+					{%else%}
+						<img src="{% static 'images/sucesso.png' %}">
+					{%endif%}
+					<p>{{msg}}</p>
+				</div>
+				<script>
+				    var x = document.getElementById("snackbar")
+				    x.className = "show";
+				    setTimeout(function(){ x.className = x.className.replace("show", ""); }, 4000);
+				</script>
+			{%endif%}
+		</div>
+	{%endif%}
+{%endblock%}

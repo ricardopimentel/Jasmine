@@ -1,0 +1,233 @@
+<meta charset="UTF-8"/>
+{% extends "base.html" %}
+{% load impressoras_extras %}
+{% load staticfiles %}
+{% load pagination_tags %}
+{%block titulo%}{{title}}{%endblock%}
+
+{%block top%}
+	{% if request.session.nome%}
+			<h1>{{request.session.nome}}</h1>
+			<a href="/jasmine/logout/"><h2>Sair</h2></a>
+		{%endif%}
+{%endblock%}
+
+{%block menu%}
+	{% if not request.session.userl %}
+		<meta http-equiv="refresh" content="0; url=/jasmine/login/">
+	{%else%}
+		{% if request.session.menu%}
+			{%for item in request.session.menu%}
+				{% if item == 'DIGITALIZAÇÕES' %}
+					<li> 
+						<a href="/{{ request.session.url|get_at_index:forloop.counter0 }}">
+							<div class="item-menu-selec">
+								<img src="{% static 'images/'%}{{request.session.img|get_at_index:forloop.counter0}}"  alt="" />
+								<p>{{item}}</p>
+							</div>
+						</a>
+					</li>
+				{% elif item == 'ADMINISTRAÇÃO' %}
+					<li>
+						<div class="dropdown-menu">
+							<a href="/{{ request.session.url|get_at_index:forloop.counter0 }}">
+								<div class="item-menu">
+									<img src="{% static 'images/'%}{{request.session.img|get_at_index:forloop.counter0}}"  alt="" />
+									<p>{{item}}</p>							
+								</div>
+							</a>
+							<div class="dropdown-content-menu">
+								<div class="dropdown-content-item-menu"><img src="{% static 'images/admin24.png' %}"><a href="/jasmine/admin/digi">Conf. de Digitalizações</a></div>
+								<div class="dropdown-content-item-menu"><img src="{% static 'images/admin24.png' %}"><a href="/jasmine/admin/ad">Conf. do Active Directory</a></div>
+								<div class="dropdown-content-item-menu"><img src="{% static 'images/admin24.png' %}"><a href="/jasmine/admin/tutoriais/add">Criar Tutorial</a></div>
+								<div class="dropdown-content-item-menu"><img src="{% static 'images/admin24.png' %}"><a href="/jasmine/viewlogs/*user*/*action*/*host*/">Visualizador de Logs</a></div>
+							</div>
+						</div>
+					</li>
+				{%else%}
+					<li> 
+						<a href="/{{ request.session.url|get_at_index:forloop.counter0 }}">
+							<div class="item-menu">
+								<img src="{% static 'images/'%}{{request.session.img|get_at_index:forloop.counter0}}"  alt="" />
+								<p>{{item}}</p>
+							</div>
+						</a>
+					</li>
+				{%endif%}
+			{%endfor%}
+		{%endif%}
+	{%endif%}
+{%endblock%}
+
+{%block conteudo%}
+	{% if not request.session.userl %}
+		<meta http-equiv="refresh" content="0; url=/login/">
+	{%else%}
+		<div class="cartao">
+			<img src="{% static 'images/cloud.png' %}" alt="" width="70"/>
+			<h1>Documentos Digitalizados</h1>
+			<br>
+			{% if err %}
+				{% if request.session.usertip == "admin" %}
+					<div class="action_bar_tuto">
+						<a href="/jasmine/admin/digi" title="Alterar Caminho da Pasta"><img src="{% static 'images/edit24b.png' %}" onmouseover="this.src='{% static 'images/edit24.png' %}'" onmouseout="this.src='{% static 'images/edit24b.png' %}'"></a>
+					</div>
+					<p>{{err}}</p>
+				{%else%}
+					<p>{{err}}. Procure o Administrador.</p>
+				{%endif%}
+			{%else%}
+				<div class="navegation_bar">
+					<a href="/jasmine/escaneados/*printer*/*file*/*action*/">Digitalizações</a>
+					{% if printer %}
+						<a href="/jasmine/escaneados/{{printer}}/*file*/*action*/">{{printer}}</a>
+					{% endif %}
+				</div>
+				{% if nomes_folders %}
+					<div class="box-file">
+						{% autopaginate nomes_folders 10 %}
+							{% for nome_folder in nomes_folders %}
+								<div class="box_folder">
+									<a href="/jasmine/escaneados/{{nome_folder}}/*file*/*action*/" title="Abrir {{nome_folder}}">
+										<div class="folder">
+											<br><img src="{% static 'images/folder2.png' %}" alt="" />
+										</div>
+									</a>
+									<p>{{nome_folder}}</p>
+								</div>
+							{%endfor%}
+						{% paginate %}
+					</div>
+				{% elif nomes_arquivos %}
+					<div class="box-file">
+						{% autopaginate nomes_arquivos 10 %}
+							{% for nome_arquivo in nomes_arquivos %}
+								{% if nome_arquivo|extensao_arquivo == 'nada' %}
+									<a title="{{nome_arquivo}}">
+										<div class="arquivo_load">
+											<div class="arquivo_cab_load">
+												<p>Carregando arquivo</p>
+											</div>
+											<img src="{% static 'images/fileload.gif' %}" alt="" />
+											
+											<meta http-equiv="refresh" content="5; url=/jasmine/escaneados/{{printer}}/*file*/*action*/">
+										</div>
+									</a>
+								{% else %}
+									<a href="/jasmine/escaneados/{{printer}}/{{nome_arquivo}}/ope/" title="Abrir {{nome_arquivo}}">
+										<div class="arquivo">
+											{% if nome_arquivo|extensao_arquivo == 'pdf' %}
+												<div class="arquivo_bar_top">
+													<img src="{% static 'images/pdf_10.png' %}" alt="" />
+												</div>
+											{% elif nome_arquivo|extensao_arquivo == 'jpg' %}
+												<div class="arquivo_bar_top">
+													<img src="{% static 'images/image_10.png' %}" alt="" />
+												</div>
+											{% endif %}
+											<p><b>{{nome_arquivo}}</b></p>
+											<p>{{nome_arquivo|data_arquivo:printer|convert_datetime}}</p>
+											<p>{{nome_arquivo|tam_arquivo:printer}}</p>
+											<div class="opcoes">
+												<div class="tooltip">
+													<a onclick="confirmaExclusao('{{printer}}', '{{nome_arquivo}}')"><img src="{% static 'images/delete24.png' %}" alt="" /></a>
+													<script>
+														function confirmaExclusao(printer, nome_arquivo) {
+														   if (confirm("Tem certeza que deseja excluir "+ nome_arquivo+ "?")) {
+														      location.href="/jasmine/escaneados/"+printer+"/"+nome_arquivo+"/del/"
+														   }
+														}
+													</script>
+													<span class="tooltiptext">Apagar arquivo</span>
+												</div>
+												<div class="tooltip">
+													<a href="/jasmine/escaneados/{{printer}}/{{nome_arquivo}}/dow/"><img src="{% static 'images/down24-1.png' %}" alt=""/></a>
+													<span class="tooltiptext">Baixar arquivo</span>
+												</div>
+												{% if nome_arquivo|extensao_arquivo == 'pdf' %}
+													<div class="dropdown">
+														<span><img src="{% static 'images/more24.png' %}" alt="" /></span>
+													    <div class="dropdown-content">
+															<div class="dropdown-content-item"><img src="{% static 'images/makepdf24.png' %}"><a onclick="mostrar('modal_fullscreen')" href="/jasmine/convert/{{printer}}/{{nome_arquivo}}">Tornar Pesquisável</a></div>
+														</div>
+													</div>
+												{% endif %}
+											</div>
+										</div>
+									</a>
+								{% endif %}
+							{%endfor%}
+						{% paginate %}
+					{%endif%}
+				{%endif%}
+			</div>
+		</div>
+		
+		<!--
+		<div id="float-center-menu">
+			<label id="float-menu-button" for="float-menu-open" aria-hidden="true"><span id="fa fa-bars fa-2x"></span></label>
+			<input id="float-menu-open" id="float-menu-open" type="checkbox" aria-hidden="true" />
+			<nav id="float-menu" role="navigation">
+				<a href="#"><img src="{% static 'images/cam.png' %}" alt="" /></a>
+				<a href="#"><img src="{% static 'images/coud.png' %}" alt="" /></a>
+				<a href="#"><img src="{% static 'images/bell.png' %}" alt="" /></a>
+				<a href="#"><img src="{% static 'images/boat.png' %}" alt="" /></a>
+				<a href="#"><img src="{% static 'images/image.png' %}" alt="" /></a>
+			</nav>
+		</div>
+		-->
+		<div id="modal_fullscreen" class="modal_fullscreen">
+			<div class="box-convert">
+				<a title="O arquivo está sendo convertido">
+					<div class="circle-convert">
+						<img src="{% static 'images/fileload.gif' %}" alt="" />
+					</div>
+					<p>Convertento, aguarde...</p>
+				</a>
+			</div>
+		</div>
+														
+		<div class="snackbar">
+			{%if msg%}
+				<div id="snackbar">
+					{% if image_snack %}
+						<img src="{% static 'images/'%}{{image_snack}}">
+					{%else%}
+						<img src="{% static 'images/sucesso.png' %}">
+					{%endif%}
+					<p>{{msg}}</p>
+				</div>
+				<script>
+				    var x = document.getElementById("snackbar")
+				    x.className = "show";
+				    setTimeout(function(){ x.className = x.className.replace("show", ""); }, 4000);
+				</script>
+				{%if printer%}
+					<meta http-equiv="refresh" content="4; url=/jasmine/escaneados/{{printer}}/*file*/*action*/">
+				{%else%}
+					<meta http-equiv="refresh" content="4; url=/jasmine/escaneados/*printer*/*file*/*action*/">
+				{% endif%}
+			{% endif%}
+		</div>
+		
+		<script>
+			function mostrarocultar(mostrar, ocultar){
+				$("#"+mostrar).show(500);
+				document.getElementById(ocultar).style.display = "none";
+			}
+			function ocultarmostrar(mostrar, ocultar){
+				$("#"+ocultar).hide(500);
+				$("#"+mostrar).show(500);
+			}
+			function  mostrar(ID){
+				document.getElementById(ID).style.display = "block";
+			
+			}
+			function  ocultar(ID){
+				document.getElementById(ID).style.display = "none";
+				$("#"+ID).hide("slow");
+			}
+		</script>
+		
+	{%endif%}
+{%endblock%}

@@ -1,0 +1,13 @@
+<!DOCTYPE html PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML>
+   <HEAD>
+      <TITLE>
+         A Small Hello 
+      </TITLE>
+      {{ form.media }}
+   </HEAD>
+<BODY>
+	{%csrf_token%}
+	{{form.as_p}}
+</BODY>
+</HTML>

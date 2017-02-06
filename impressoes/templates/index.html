@@ -1,0 +1,193 @@
+<meta charset="UTF-8"/>
+{% extends "base.html" %}
+{% load impressoras_extras %}
+{% load staticfiles %}
+{%block titulo%}{{title}}{%endblock%}
+
+{%block top%}
+		{% if request.session.nome%}
+			<h1>{{request.session.nome}}</h1>
+			<a href="/jasmine/logout/"><h2>Sair</h2></a>
+		{%endif%}
+{%endblock%}
+
+{%block menu%}
+	{% if not request.session.userl %}
+		<meta http-equiv="refresh" content="0; url=/jasmine/login/">
+	{%else%}
+		{% if request.session.menu%}
+			{%for item in request.session.menu%}
+				{% if item == itemselec %}
+					<li> 
+						<a href="/{{ request.session.url|get_at_index:forloop.counter0 }}">
+							<div class="item-menu-selec">
+								<img src="{% static 'images/'%}{{request.session.img|get_at_index:forloop.counter0}}"  alt="" />
+								<p>{{item}}</p>
+							</div>
+						</a>
+					</li>
+				{% elif item == 'ADMINISTRAÇÃO' %}
+					<li>
+						<div class="dropdown-menu">
+							<a href="/{{ request.session.url|get_at_index:forloop.counter0 }}">
+								<div class="item-menu">
+									<img src="{% static 'images/'%}{{request.session.img|get_at_index:forloop.counter0}}"  alt="" />
+									<p>{{item}}</p>							
+								</div>
+							</a>
+							<div class="dropdown-content-menu">
+								<div class="dropdown-content-item-menu"><img src="{% static 'images/admin24.png' %}"><a onclick="mostrar('modal_fullscreen')" href="/jasmine/admin/digi">Conf. de Digitalizações</a></div>
+								<div class="dropdown-content-item-menu"><img src="{% static 'images/admin24.png' %}"><a onclick="mostrar('modal_fullscreen')" href="/jasmine/admin/ad">Conf. do Active Directory</a></div>
+								<div class="dropdown-content-item-menu"><img src="{% static 'images/admin24.png' %}"><a onclick="mostrar('modal_fullscreen')" href="/jasmine/admin/tutoriais/add">Criar Tutorial</a></div>
+								<div class="dropdown-content-item-menu"><img src="{% static 'images/admin24.png' %}"><a onclick="mostrar('modal_fullscreen')" href="/jasmine/viewlogs/*user*/*action*/*host*/">Visualizador de Logs</a></div>
+							</div>
+						</div>
+					</li>
+				{%else%}
+					<li> 
+						<a href="/{{ request.session.url|get_at_index:forloop.counter0 }}">
+							<div class="item-menu">
+								<img src="{% static 'images/'%}{{request.session.img|get_at_index:forloop.counter0}}"  alt="" />
+								<p>{{item}}</p>
+							</div>
+						</a>
+					</li>
+				{%endif%}
+			{%endfor%}
+		{%endif%}
+	{%endif%}
+{%endblock%}
+	
+{%block conteudo%}
+	{% if not request.session.userl %}
+		<meta http-equiv="refresh" content="0; url=/jasmine/login/">
+	{% else %}
+		<div class="card">
+			<img src="{% static 'images/user.png' %}" alt="" />
+			<h1>Top 5 Usuários</h1>
+			
+			<div>
+				<canvas id="GraficoDonut" style="width:100%;"></canvas>
+	            <script type="text/javascript">
+	
+	                var options = {
+	                    responsive:true                 
+	                };
+	                
+	                var data = [                            
+						{%for item in top_users%}
+		                    {             
+		                    	value: {{item.1|split1000}},
+		                        color:"{{cores_primarias|get_at_index:forloop.counter0}}",
+		                        highlight: "{{cores_secundarias|get_at_index:forloop.counter0}}",
+		                        label: "{{item.0}}"
+		                    },
+	                    {%endfor%}
+	                ]
+	            </script>
+			</div>
+			<table>
+				<tbody>
+					<tr>
+						<td><b>Usuário</b></td>
+						<td><b>Impressões</b></td>
+					</tr>
+					{%for item in top_users%}
+						<tr>
+							<td><a href="/jasmine/relatorio/{{item.0}}/ / /">{{item.0}}</a></td>
+							<td>{{item.1|split1000}}</td>
+						</tr>
+					{%endfor%}
+				</tbody>
+			</table>
+		</div>
+	
+		<div class="card">
+			<img src="{% static 'images/printer.png' %}" alt="" />
+			<h1>Top 5 Impressoras</h1>
+			
+			<div>
+				<canvas id="GraficoDonut1" style="width:100%;"></canvas>
+	            <script type="text/javascript">
+	                var options1 = {
+	                    responsive:true                    
+	                };
+	                var data1 = [
+						{%for item in top_printers%}
+							{
+		                    	value: {{item.1|split1000}},
+		                        color:"{{cores_primarias|get_at_index:forloop.counter0}}",
+		                        highlight: "{{cores_secundarias|get_at_index:forloop.counter0}}",
+		                        label: "{{item.0}}"
+		                    },
+						{%endfor%}
+	                 ]
+	            </script>
+			</div>
+			<table>
+				<tbody>
+					<tr>
+						<td><b>Impressora</b></td>
+						<td><b>Impressões</b></td>
+					</tr>
+					{%for item in top_printers%}
+						<tr>
+							<td><a href="/jasmine/relatorio/ /{{item.0}}/ /">{{item.0}}</a></td>
+							<td>{{item.1|split1000}}</td>
+						</tr>
+					{%endfor%}
+				</tbody>
+			</table>
+		</div>
+		
+		<div class="card">
+			<img src="{% static 'images/host.png' %}" alt="" />
+			<h1>Top 5 IPs</h1>
+			
+			<div>
+				<canvas id="GraficoDonut2" style="width:100%;"></canvas>
+	            <script type="text/javascript">
+	
+	                var options2 = {
+	                    responsive:true                    
+	                };
+	                
+	                var data2 = [
+						{%for item in top_hosts%}
+		                    {             
+		                    	value: {{item.1|split1000}},
+		                        color:"{{cores_primarias|get_at_index:forloop.counter0}}",
+		                        highlight: "{{cores_secundarias|get_at_index:forloop.counter0}}",
+		                        label: "{{item.0}}"
+		                    },
+	                    {%endfor%}
+	                ]
+	                window.onload = function(){
+	                	var ctx = document.getElementById("GraficoDonut").getContext("2d");
+	                    var PizzaChart = new Chart(ctx).Doughnut(data, options);
+	
+	                    var ctx1 = document.getElementById("GraficoDonut1").getContext("2d");
+	                    var PizzaChart1 = new Chart(ctx1).Doughnut(data1, options1);
+	
+	                    var ctx2 = document.getElementById("GraficoDonut2").getContext("2d");
+	                    var PizzaChart2 = new Chart(ctx2).Doughnut(data2, options2);
+	                }
+	            </script>
+			</div>
+			<table>
+				<tbody>
+					<tr>
+						<td><b>IP</b></td>
+						<td><b>Impressões</b></td>
+					</tr>
+					{%for item in top_hosts%}
+						<tr>
+							<td><a href="/jasmine/relatorio/ / /{{item.0}}/">{{item.0}}</a></td>
+							<td>{{item.1|split1000}}</td>
+						</tr>
+					{%endfor%}
+				</tbody>
+			</table>			
+		</div>
+	{%endif%}
+{%endblock%}
