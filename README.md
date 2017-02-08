@@ -1,4 +1,3 @@
-
 [[Resultado Final do projeto]()](https://www.youtube.com/watch?v=S1jLF_Dtk18)
 
 
@@ -227,6 +226,12 @@ Aplique o atalho na inicialização do sistema
 
 ```
 sudo update-rc.d jasmine defaults
+```
+
+Rodar servidor
+
+```
+sudo /etc/init.d/jasmine start
 ```
 
 Volte à página de configuração
