@@ -209,7 +209,7 @@ Volte para o servidor execute o comando:
 
 ```
 sudo python manage.py runmodwsgi --setup-only --port=8000 --user
-user --server-root=/etc/mod\_wsgi-express-80
+user --server-root=/etc/mod_wsgi-express-80
 ```
 
 ![](images/image20.png)
