@@ -1,0 +1,235 @@
+<meta charset="UTF-8"/>
+{% extends "base.html" %}
+{% load impressoras_extras %}
+{% load staticfiles %}
+{%block titulo%}{{title}}{%endblock%}
+
+{%block top%}
+		{% if request.session.nome%}
+			<h1>{{request.session.nome}}</h1>
+			<a href="/jasmine/logout/"><h2>Sair</h2></a>
+		{%endif%}
+{%endblock%}
+
+{%block menu%}
+	{% if not request.session.userl %}
+		<meta http-equiv="refresh" content="0; url=/jasmine/login/">
+	{%else%}
+		{% if request.session.menu%}
+			{%for item in request.session.menu%}
+				{% if item == 'RELATÓRIOS' %}
+					<li> 
+						<a href="/{{ request.session.url|get_at_index:forloop.counter0 }}">
+							<div class="item-menu-selec">
+								<img src="{% static 'images/'%}{{request.session.img|get_at_index:forloop.counter0}}"  alt="" />
+								<p>{{item}}</p>
+							</div>
+						</a>
+					</li>
+				{% elif item == 'ADMINISTRAÇÃO' %}
+					<li>
+						<div class="dropdown-menu">
+							<a href="/{{ request.session.url|get_at_index:forloop.counter0 }}">
+								<div class="item-menu">
+									<img src="{% static 'images/'%}{{request.session.img|get_at_index:forloop.counter0}}"  alt="" />
+									<p>{{item}}</p>							
+								</div>
+							</a>
+							<div class="dropdown-content-menu">
+								<div class="dropdown-content-item-menu"><img src="{% static 'images/admin24.png' %}"><a onclick="mostrar('modal_fullscreen')" href="/jasmine/admin/digi">Conf. de Digitalizações</a></div>
+								<div class="dropdown-content-item-menu"><img src="{% static 'images/admin24.png' %}"><a onclick="mostrar('modal_fullscreen')" href="/jasmine/admin/ad">Conf. do Active Directory</a></div>
+								<div class="dropdown-content-item-menu"><img src="{% static 'images/admin24.png' %}"><a onclick="mostrar('modal_fullscreen')" href="/jasmine/admin/tutoriais/add">Criar Tutorial</a></div>
+								<div class="dropdown-content-item-menu"><img src="{% static 'images/admin24.png' %}"><a onclick="mostrar('modal_fullscreen')" href="/jasmine/viewlogs/*user*/*action*/*host*/">Visualizador de Logs</a></div>
+							</div>
+						</div>
+					</li>
+				{%else%}
+					<li> 
+						<a href="/{{ request.session.url|get_at_index:forloop.counter0 }}">
+							<div class="item-menu">
+								<img src="{% static 'images/'%}{{request.session.img|get_at_index:forloop.counter0}}"  alt="" />
+								<p>{{item}}</p>
+							</div>
+						</a>
+					</li>
+				{%endif%}
+			{%endfor%}
+		{%endif%}
+	{%endif%}
+{%endblock%}
+
+{%block conteudo%}
+	{% if not request.session.userl %}
+		<meta http-equiv="refresh" content="0; url=/login/">
+	{%else%}
+		<div class="limit">
+			<div class="card_noprinter">
+				<div id="show" class="show">
+					<div class="card_noprinter_cab">
+						<a onclick="mostrarocultar('hide', 'show')">
+							<img src="{% static 'images/filter.png' %}" border="0" onmouseover="this.src='{% static 'images/filterexpand.png' %}'" onmouseout="this.src='{% static 'images/filter.png' %}'">
+						</a>
+					</div>
+				</div>
+				<div id="hide" class="hide">
+					<div class="card_noprinter_cab">
+						<a onclick="ocultarmostrar('show', 'hide')">
+							<img src="{% static 'images/filter.png' %}" border="0" onmouseover="this.src='{% static 'images/filterecolhe.png' %}'" onmouseout="this.src='{% static 'images/filter.png' %}'">
+						</a>
+						<h1>Filtros</h1>
+					</div>
+					<div class="formulario">
+						<form method="post" action="/jasmine/relatorio/user/printer/host/">
+							{% if err %}
+								<div class="Erro-form">
+									<p>{{err}}</p>
+								</div>
+							{% endif %}
+							<h5>Data Inicial: <br><input type="date" id="data-inicial" name="data-inicial" value="{{inicial}}"/></h5>
+							<h5>Data Final: <br><input type="date" id="data-final" name="data-final" value="{{final}}"/></h5>
+							<h5>Usuário: <br>
+								<select size="1" name="user-r">
+									<option value=" ">Todos</option>
+									{%for item in top_users%}
+										<option {%if item.0 == user%}selected="selected"{%endif%} value="{{item.0}}">{{item.0}}</option>
+									{%endfor%}
+								</select>
+							</h5>
+							<h5>Impressora: <br>
+								<select size="1" name="printer-r">
+									<option value=" ">Todas</option>
+									{%for item in top_printers%}
+										<option {%if item.0 == printer%}selected="selected"{%endif%} value="{{item.0}}">{{item.0}}</option>
+									{%endfor%}
+								</select>
+							</h5>
+							<h5>IP: <br>
+								<select size="1" name="host-r">
+									<option value=" ">Todos</option>
+									{%for item in top_hosts%}
+										<option {%if item.0 == host%}selected="selected"{%endif%} value="{{item.0}}">{{item.0}}</option>
+									{%endfor%}
+								</select>						
+							</h5>
+							<h5><input type="submit" id="botao" name="commit" value="Pesquisar"></h5>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div class="cartao print">
+			<img src="{% static 'images/report.png' %}" alt="" width="70"/>
+			<h1>{{titulo_relat}}</h1>
+			<br>
+			<div class="navegation_bar">
+				<a href="/jasmine/relatorio/*user*/*printer*/*host*">Relatórios</a>
+			</div>
+			<br>
+			{% if resultado %}
+				<div class="tab-rel">
+					<table id="minhaTabela">				
+						<thead>
+							<tr>
+								<th><b>Data</b></td>
+								<th><b>Usuário</b></td>
+								<th><b>Impressora</b></td>
+								<th><b>IP</b></td>
+								<th><b>Título</b></td>
+								<th><b>Páginas</b></td>
+							</tr>
+						</thead>				
+						<tbody>
+							{%for item in resultado%}
+								<tr>
+									<td>{{item.0|convert_datetime}}</td>
+									<td><a href="/jasmine/relatorio/{{item.1}}/ / /">{{item.1}}</a></td>
+									<td><a href="/jasmine/relatorio/ /{{item.2}}/ /">{{item.2}}</a></td>
+									<td><a href="/jasmine/relatorio/ / /{{item.3}}/">{{item.3}}</a></td>
+									<td title="{{item.4}}">{{item.4|cut_string:15}}</td>
+									<td>{{item.5|split1000}}</td>
+								</tr>
+							{%endfor%}
+						</tbody>
+					</table>
+			    </div>
+			    
+			    <script>
+			        $(document).ready(function () {
+			            $('#minhaTabela').DataTable({
+			            	"bPaginate": true,
+			            	"bLengthChange": true,
+			            	"bFilter": true,
+			            	"bInfo": true,
+			            	"bAutoWidth": true,
+			                "language": {
+			                    "sEmptyTable": "Nenhum registro encontrado",
+			                    "sInfo": "Mostrando de _START_ até _END_ de _TOTAL_ registros",
+			                    "sInfoEmpty": "Mostrando 0 até 0 de 0 registros",
+			                    "sInfoFiltered": "(Filtrados de _MAX_ registros)",
+			                    "sInfoThousands": ".",
+			                    "sLengthMenu": "_MENU_ resultados por página",
+			                    "sLoadingRecords": "Carregando...",
+			                    "sProcessing": "Processando...",
+			                    "sZeroRecords": "Nenhum registro encontrado",
+			                    "sSearch": "Pesquisar",
+			                    "oPaginate": {
+		                        "sNext": "»",
+		                        "sPrevious": "«",
+		                        "sFirst": "Primeiro",
+		                        "sLast": "Último"
+			                    }
+			                },
+			            });
+			        });
+				</script> 
+				<br>
+				<p id="direita">O total de páginas impressas no periodo é <b>{{soma.0.0|split1000}}</b></p>
+			{% endif%}
+		</div>
+		
+		<div class="action-container">
+	        <a onclick="window.print();">
+		        <div class="fab-container" tooltip="Salvar em PDF">
+		            <div class="fab" id="root"><span></span>
+		            	
+		            </div>
+		        </div>
+	        </a>
+	        <a href="/jasmine/print/" class="fab-container" tooltip="Salvar em PDF">
+		        <div class="fab" id="point"><span></span>
+	            </div>
+	        </a>
+	        <a href="#" class="fab-container" tooltip="Topo">
+	            <div class="fab" id="fence"><span></span>
+	            </div>
+	        </a>
+	    </div>
+	{%endif%}
+	
+	<script>
+		function mostrarocultar(mostrar, ocultar){
+			$("#"+mostrar).show(500);
+			document.getElementById(ocultar).style.display = "none";
+		}
+		function ocultarmostrar(mostrar, ocultar){
+			$("#"+ocultar).hide(500);
+			$("#"+mostrar).show(500);
+		}
+		function  mostrar(ID){
+			document.getElementById(ID).style.display = "block";
+		
+		}
+		function  ocultar(ID){
+			document.getElementById(ID).style.display = "none";
+			$("#"+ID).hide("slow");
+		}
+	</script>
+	
+	{% if err %}
+		<script type="text/javascript">
+			console.log(mostrarocultar.call( 'contexto', 'hide', 'show' ));
+		</script>
+	{%endif%}
+	
+{%endblock%}

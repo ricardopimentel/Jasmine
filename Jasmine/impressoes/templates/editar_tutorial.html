@@ -1,0 +1,131 @@
+<meta charset="UTF-8"/>
+{% extends "base.html" %}
+{% load impressoras_extras %}
+{% load staticfiles %}
+{% load pagination_tags %}
+
+{%block titulo%}{{title}}{%endblock%}
+
+{%block head%}
+	<script src="{% static 'js/tinymce/tinymce.min.js' %}"></script>
+	<script>
+		tinymce.init({
+			selector: 'textarea',
+			theme: 'modern',
+			language: 'pt_BR',
+			plugins: [
+				'advlist autolink lists link image charmap print preview hr anchor pagebreak spellchecker',
+				'searchreplace wordcount visualblocks visualchars code fullscreen',
+				'insertdatetime media nonbreaking save table contextmenu directionality',
+				'emoticons template paste textcolor colorpicker textpattern imagetools codesample toc'
+			],
+			toolbar1: 'spellchecker | undo redo | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image',
+			toolbar2: 'print preview media | forecolor backcolor emoticons | codesample',
+			image_advtab: true,
+			templates: [
+				{ title: 'Test template 1', content: 'Test 1' },
+				{ title: 'Test template 2', content: 'Test 2' }
+			],
+			browser_spellcheck : true,
+		});
+	</script>
+{%endblock%}
+
+{%block top%}
+	{% if request.session.nome%}
+			<h1>{{request.session.nome}}</h1>
+			<a href="/jasmine/logout/"><h2>Sair</h2></a>
+		{%endif%}
+{%endblock%}
+
+{%block menu%}
+	{% if not request.session.userl %}
+		<meta http-equiv="refresh" content="0; url=/jasmine/login/">
+	{%else%}
+		{% if request.session.menu%}
+			{%for item in request.session.menu%}
+				{% if item == 'ADMINISTRAÇÃO' %}
+					<li>
+						<div class="dropdown-menu">
+							<a href="/{{ request.session.url|get_at_index:forloop.counter0 }}">
+								<div class="item-menu-selec">
+									<img src="{% static 'images/'%}{{request.session.img|get_at_index:forloop.counter0}}"  alt="" />
+									<p>{{item}}</p>							
+								</div>
+							</a>
+							<div class="dropdown-content-menu">
+								<div class="dropdown-content-item-menu"><img src="{% static 'images/admin24.png' %}"><a onclick="mostrar('modal_fullscreen')" href="/jasmine/admin/digi">Conf. de Digitalizações</a></div>
+								<div class="dropdown-content-item-menu"><img src="{% static 'images/admin24.png' %}"><a onclick="mostrar('modal_fullscreen')" href="/jasmine/admin/ad">Conf. do Active Directory</a></div>
+								<div class="dropdown-content-item-menu"><img src="{% static 'images/admin24.png' %}"><a onclick="mostrar('modal_fullscreen')" href="/jasmine/admin/tutoriais/add">Criar Tutorial</a></div>
+								<div class="dropdown-content-item-menu"><img src="{% static 'images/admin24.png' %}"><a onclick="mostrar('modal_fullscreen')" href="/jasmine/viewlogs/*user*/*action*/*host*/">Visualizador de Logs</a></div>
+							</div>
+						</div>
+					</li>
+				{%else%}
+					<li> 
+						<a href="/{{ request.session.url|get_at_index:forloop.counter0 }}">
+							<div class="item-menu">
+								<img src="{% static 'images/'%}{{request.session.img|get_at_index:forloop.counter0}}"  alt="" />
+								<p>{{item}}</p>
+							</div>
+						</a>
+					</li>
+				{%endif%}
+			{%endfor%}
+		{%endif%}
+	{%endif%}
+{%endblock%}
+
+{%block conteudo%}
+	{% if not request.session.userl %}
+		<meta http-equiv="refresh" content="0; url=/login/">
+	{%else%}
+		<div class="cartao">
+			<img src="{% static 'images/tutorial.png' %}" alt="" width="70"/>
+			<h1>Editar Tutorial</h1>
+			<br>
+			<div class="navegation_bar">
+				<a href="/jasmine/admin/">Administração</a>
+				<a href="/jasmine/admin/tutoriais/view/{{id}}">Editar Tutorial</a>
+			</div>
+			<br>			
+			<div class="formulario">
+				<form method="post" action="/jasmine/admin/tutoriais/view/{{id}}"> {%csrf_token%}
+			 		{{form.as_p}}
+				   	<p><input type="submit" name="commit" value="Postar" id="botao" ></p>
+				</form>
+			</div>
+		</div>
+		
+        <script>
+			function mostrarocultar(mostrar, ocultar){
+				$("#"+mostrar).show(500);
+				document.getElementById(ocultar).style.display = "none";
+			}
+			function ocultarmostrar(mostrar, ocultar){
+				$("#"+ocultar).hide(500);
+				$("#"+mostrar).show(500);
+			}
+			function  mostrar(ID){
+				document.getElementById(ID).style.display = "block";
+
+			}
+			function  ocultar(ID){
+				document.getElementById(ID).style.display = "none";
+				$("#"+ID).hide("slow");
+			}
+		</script>
+
+		{% if messages %}
+            <div class="msg-popup-container">
+                {% for message in messages %}
+                    <div id="{{ forloop.counter0 }}" class="msg-popup {{ message.tags }}">
+                        <img src="{% static 'images/'%}{{ message.tags }}.png" alt="" width="70" height="70"/>
+                        <p>{{ message }}</p>
+                        <a onclick="ocultar('{{ forloop.counter0 }}')">x</a>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+	{%endif%}
+{%endblock%}

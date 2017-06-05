@@ -1,0 +1,123 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="pdfkit-orientation" content="Landscape"/>
+		<meta charset="UTF-8"/>
+		<title>{%block titulo%}{{title}}{%endblock%}</title>
+		<style>
+			.header_content{
+				width: 100%;
+				border: 1px solid #f2f2f2;
+				border-radius: 6px;
+			}
+			
+			.header_content table{
+				width: 100%;
+			}
+			
+			#right{
+				text-align: right;
+			}
+			
+			#center{
+				text-align: center;
+			}
+
+		    h1{
+		    	text-align: center;
+		    }
+		    
+		    table{
+		    	text-align: center;
+		    	width: 100%;
+		    }
+		    
+		    .content table {
+			    border-collapse: collapse;
+			    width: 100%;
+			    background: aqua;
+			}
+			
+			.content th, td {
+			    text-align: left;
+			    padding: 8px;
+			}
+			
+			.content tr:nth-child(even){background-color: #f2f2f2}
+			
+			.content th {
+			    background-color: #4CAF50;
+			    color: white;
+			}
+		    
+		</style>
+	</head>
+	
+	<body>
+		<div class="header_content">
+		   	<table class="content">
+		   		<tbody>
+		   			<tr>
+						<td> <img alt="" src="{{base_dir}}/impressoes/static/images/IFTO.jpg"> </td>
+				    	<td id="right"> <p id="direita">{% now "j" %} de {% now "F"%} de {%now "Y"%} às {%now "H:i" %}</p> </td>
+				    </tr>
+				</tbody>
+		   	</table>
+		</div>
+	
+		<!-- Conteúdo -->
+		<div class="container-geral">
+			<h1>Relatório de Impressões</h1>
+			<div class="conteiner-right">
+				<table class="content">
+					<tbody>
+						<tr>
+							<th><b>Data</b></th>
+							<th><b>Usuário</b></th>
+							<th><b>Impressora</b></th>
+							<th><b>IP</b></th>
+							<th id="right"><b>Título</b></th>
+							<th id="right"><b>Páginas</b></th>
+						</tr>
+						{%for item in resultado%}
+							<tr>
+								<td>{{item.0|convert_datetime}}</td>
+								<td>{{item.1}}</td>
+								<td>{{item.2}}</td>
+								<td>{{item.3}}</td>
+								<td id="right">{{item.4|cut_string:70}}</td>
+								<td id="right">{{item.5}}</td>
+							</tr>
+						{%endfor%}
+					</tbody>
+				</table>
+				<br>
+				
+				<p id="direita">O total de páginas impressas no período de {{inicial}} a {{final}} é:   <b>   {{soma.0.0|split1000}}</b></p>
+			</div>
+			
+			<div>
+				<br>
+				<br>
+				<h1>Filtros Utilizados:</h1>
+				<br>
+				<table>
+		    		<tbody>
+		    			<tr>
+							<td id="center"> <p><b>Usuário</b></p> </td>
+					    	<td id="center"> <p><b>Impressora</b></p> </td>
+					    	<td id="center"> <p><b>Host</b></p> </td>
+					    </tr>
+					    <tr>
+							<td id="center"> <p>{%if user%}{{user}}{%else%}Todos{%endif%}</p> </td>
+					    	<td id="center"> <p>{%if printer%}{{printer}}{%else%}Todas{%endif%}</p> </td>
+					    	<td id="center"> <p>{%if host%}{{host}}{%else%}Todos{%endif%}</p> </td>
+					    </tr>
+					</tbody>
+	    		</table>
+		    	<br>
+			</div>
+		</div>
+	</body>
+</html>

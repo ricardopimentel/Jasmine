@@ -1,0 +1,186 @@
+<meta charset="UTF-8"/>
+{% extends "base.html" %}
+{% load impressoras_extras %}
+{% load staticfiles %}
+{%block titulo%}{{title}}{%endblock%}
+
+{%block top%}
+	{% if request.session.nome%}
+			<h1>{{request.session.nome}}</h1>
+			<a href="/jasmine/logout/"><h2>Sair</h2></a>
+		{%endif%}
+{%endblock%}
+
+{%block menu%}
+	{% if not request.session.userl %}
+		<meta http-equiv="refresh" content="0; url=/login/">
+	{%else%}
+		{% if request.session.menu%}
+			{%for item in request.session.menu%}
+				{% if item == itemselec %}
+					<li> 
+						<a href="/{{ request.session.url|get_at_index:forloop.counter0 }}">
+							<div class="item-menu-selec">
+								<img src="{% static 'images/'%}{{request.session.img|get_at_index:forloop.counter0}}"  alt="" />
+								<p>{{item}}</p>
+							</div>
+						</a>
+					</li>
+				{% elif item == 'ADMINISTRAÇÃO' %}
+					<li>
+						<div class="dropdown-menu">
+							<a href="/{{ request.session.url|get_at_index:forloop.counter0 }}">
+								<div class="item-menu">
+									<img src="{% static 'images/'%}{{request.session.img|get_at_index:forloop.counter0}}"  alt="" />
+									<p>{{item}}</p>							
+								</div>
+							</a>
+							<div class="dropdown-content-menu">
+								<div class="dropdown-content-item-menu"><img src="{% static 'images/admin24.png' %}"><a onclick="mostrar('modal_fullscreen')" href="/jasmine/admin/digi">Config. de Digitalizações</a></div>
+								<div class="dropdown-content-item-menu"><img src="{% static 'images/admin24.png' %}"><a onclick="mostrar('modal_fullscreen')" href="/jasmine/admin/ad">Config. do Active Directory</a></div>
+								<div class="dropdown-content-item-menu"><img src="{% static 'images/admin24.png' %}"><a onclick="mostrar('modal_fullscreen')" href="/jasmine/admin/tutoriais/add">Criar Tutorial</a></div>
+								<div class="dropdown-content-item-menu"><img src="{% static 'images/admin24.png' %}"><a onclick="mostrar('modal_fullscreen')" href="/jasmine/viewlogs/*user*/*action*/*host*/">Visualizador de Logs</a></div>
+							</div>
+						</div>
+					</li>
+				{%else%}
+					<li> 
+						<a href="/{{ request.session.url|get_at_index:forloop.counter0 }}">
+							<div class="item-menu">
+								<img src="{% static 'images/'%}{{request.session.img|get_at_index:forloop.counter0}}"  alt="" />
+								<p>{{item}}</p>
+							</div>
+						</a>
+					</li>
+				{%endif%}
+			{%endfor%}
+		{%endif%}
+	{%endif%}
+{%endblock%}
+
+{%block conteudo%}
+	{% if not request.session.userl %}
+		<meta http-equiv="refresh" content="0; url=/jasmine/login/">
+	{%else%}
+		<div class="limit">
+			<div class="card_noprinter">
+				<div id="show" class="show">
+					<div class="card_noprinter_cab">
+						<a onclick="mostrarocultar('hide', 'show')">
+							<img src="{% static 'images/list.png' %}" border="0" onmouseover="this.src='{% static 'images/listexpand.png' %}'" onmouseout="this.src='{% static 'images/list.png' %}'">
+						</a>
+					</div>
+				</div>
+				<div id="hide" class="hide">
+					<div class="card_noprinter_cab">
+						<a onclick="ocultarmostrar('show', 'hide')">
+							<img src="{% static 'images/list.png' %}" border="0" onmouseover="this.src='{% static 'images/listrecolhe.png' %}'" onmouseout="this.src='{% static 'images/list.png' %}'">
+						</a>
+						<h1>Tópicos</h1>
+					</div>
+					<div class="list_card">
+						<br>
+						<nav>
+							{% for item in tutos %}
+								<ul>
+									<a href="/jasmine/ajuda/{{item.id}}"><li>{{item.titulo}}</li></a>
+								</ul>
+							{%endfor%}
+						</nav>
+					</div>
+				</div>
+			</div>
+		</div>
+	
+		<div class="cartao" id="printable">
+			<img src="{% static 'images/steps.png' %}" alt="" width="70"/>
+			{% if post %}
+				<h1>{{post.titulo}}</h1>
+				<br>
+				<div class="navegation_bar">
+					<a href="/jasmine/ajuda/**topc**">Ajuda</a>
+					<a href="/jasmine/ajuda/{{post.id}}">{{post.titulo}}</a>
+				</div>
+				{%if request.session.usertip == 'admin' %}
+					<div class="action_bar_tuto">
+						<a href="/jasmine/admin/tutoriais/view/{{post.id}}" title="Editar Tutorial"><img src="{% static 'images/edit24b.png' %}" onmouseover="this.src='{% static 'images/edit24.png' %}'" onmouseout="this.src='{% static 'images/edit24b.png' %}'"></a>
+						<a href="/jasmine/admin/tutoriais/delete/{{post.id}}" title="Excluir Tutorial"><img src="{% static 'images/delete24b.png' %}" onmouseover="this.src='{% static 'images/delete24.png' %}'" onmouseout="this.src='{% static 'images/delete24b.png' %}'"></a>
+					</div>
+				{%endif%}
+				<br>
+				<div class="post">
+					{{post.texto|safe}}
+				</div>
+				<div class="dataTables_paginate">
+					<p>Criado em <b>{{post.data}}</b> por <b>{{post.user}}</b></p>
+				</div>
+			{%else%}
+				<h1>Ajuda</h1>
+				<br>
+				<div class="navegation_bar">
+					<a href="/jasmine/ajuda/**topc**">Ajuda</a>
+				</div>
+				<div class="post">
+					<p style="text-align: center;"><img src="/jasmine/static/images/bannereduc1.png" alt="" width="100%" height="200" /></p>
+					<br>
+					<p style="text-align: justify;">Esta p&aacute;gina tem a finalidade de apresentar informa&ccedil;&otilde;es &uacute;teis para o entendimento e utiliza&ccedil;&atilde;o do sistema.</p>
+					<div class="alinhamento-imagem-texto">
+						<p style="text-align: justify;">Clique no icone:	<img src="/jasmine/static/images/list.png" width="35" height="35" /> para que seja apresentada a lista com os t&oacute;picos dispon&iacute;veis para acesso.&nbsp;</p>
+					</div>					
+				</div>
+				<br><br><br><br><br><br>
+				<h1>Ultimos Tutoriais</h1>
+				<br>
+				<div class="posts-list">
+					{% for item in last %}							
+						<div class="card-list-help">
+							<div class="card-list-help-cab">
+								<div class="card-list-help-cab-leg">
+									<p>{{item.titulo}}</p>
+								</div>
+							</div>
+							<a href="/jasmine/ajuda/{{item.id}}"><p>Ler Tutorial</p></a>
+						</div>
+					{%endfor%}
+				</div>
+			{%endif%}
+		</div>
+		
+		<div class="snackbar">
+			{%if msg%}
+				<div id="snackbar">
+					{% if image_snack %}
+						<img src="{% static 'images/'%}{{image_snack}}">
+					{%else%}
+						<img src="{% static 'images/sucesso.png' %}">
+					{%endif%}
+					<p>{{msg}}</p>
+				</div>
+				<script>
+				    var x = document.getElementById("snackbar")
+				    x.className = "show";
+				    setTimeout(function(){ x.className = x.className.replace("show", ""); }, 4000);
+				</script>
+			{% endif%}
+		</div>
+		
+		<script>
+			function mostrarocultar(mostrar, ocultar){
+				$("#"+mostrar).show(500);
+				document.getElementById(ocultar).style.display = "none";
+			}
+			function ocultarmostrar(mostrar, ocultar){
+				$("#"+ocultar).hide(500);
+				$("#"+mostrar).show(500);
+			}
+			function  mostrar(ID){
+				document.getElementById(ID).style.display = "block";
+			
+			}
+			function  ocultar(ID){
+				document.getElementById(ID).style.display = "none";
+				$("#"+ID).hide("slow");
+			}
+		</script>
+	{%endif%}
+{%endblock%}
