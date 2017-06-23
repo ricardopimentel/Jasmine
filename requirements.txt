@@ -3,7 +3,7 @@ Django==1.9.13
 django-pagination-bootstrap==1.2.4
 django-tinymce==2.6.0
 django-tinymce-4==0.0.18
-evernote==1.25.0
+https://github.com/evernote/evernote-sdk-python3/archive/master.zip
 mysqlclient==1.3.10
 oauthlib==2.0.2
 olefile==0.44
@@ -12,7 +12,7 @@ pdfkit==0.6.1
 Pillow==4.1.1
 pyasn1==0.2.3
 PyPDF2==1.26.0
-pypdfocr==0.9.1
+https://github.com/ricardopimentel/pypdfocr3/archive/master.zip
 python-decouple==3.0
 python3-ldap==0.9.8.4
 PyYAML==3.12
