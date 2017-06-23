@@ -1,4 +1,9 @@
 .Jasmine
 .idea
-db.sqlite3
 .env
+__pycache__
+*.sqlite3
+*pyc
+staticfiles
+.ipynb_checkpoints/
+
