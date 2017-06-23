@@ -1,0 +1,25 @@
+#!/bin/bash
+#
+# /etc/init.d.jasmine
+
+case "$1" in
+    start)
+	echo "Inicializando Jasmine Server..."
+	/etc/mod_wsgi-express-80/apachectl start
+	;;
+
+    stop)
+	echo "Parando Jasmine Server..."
+	/etc/mod_wsgi-express-80/apachectl stop
+	;;
+
+    restart)
+	echo "Reiniciando Jasmine Server"
+	/etc/mod_wsgi-express-80/apachectl restart
+	;;
+
+    *)
+	echo "Operacao invalida"
+	;;
+
+esac

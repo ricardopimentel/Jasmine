@@ -12,10 +12,7 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 """
 
 import os
-<<<<<<< HEAD
 from decouple import config
-=======
->>>>>>> 9f532b12397d6ffd69bb2e8939b5ca4087275bcd
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -25,19 +22,11 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.9/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-<<<<<<< HEAD
 
 SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=False, cast=bool)
-=======
-SECRET_KEY = '^!c*fmy_x6z207oxe_odhw7#e(^#9zhnsw(q8quhk#!bw_xc7!'
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
-TEMPLATE_DEBUG = False
->>>>>>> 9f532b12397d6ffd69bb2e8939b5ca4087275bcd
 
 ALLOWED_HOSTS = ['*']
 
@@ -51,15 +40,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-<<<<<<< HEAD
     'Jasmine.impressoes',
     'pagination_bootstrap',
     #'mod_wsgi.server',
-=======
-    'impressoes',
-    'pagination_bootstrap',
-    'mod_wsgi.server',
->>>>>>> 9f532b12397d6ffd69bb2e8939b5ca4087275bcd
     'django.contrib.sites',
     'django.contrib.redirects',
 ]
@@ -93,11 +76,7 @@ TEMPLATES = [
         'APP_DIRS': True,
         'OPTIONS': {
             'builtins': [
-<<<<<<< HEAD
                 'Jasmine.impressoes.templatetags.impressoras_extras',
-=======
-                'impressoes.templatetags.impressoras_extras',
->>>>>>> 9f532b12397d6ffd69bb2e8939b5ca4087275bcd
             ],
             'context_processors': [
                 'django.template.context_processors.debug',
@@ -119,13 +98,8 @@ DATABASES = {
      'default': {
          'ENGINE': 'django.db.backends.mysql',
          'NAME': 'jasmine',
-<<<<<<< HEAD
-         'USER': 'root', #DIGITE USUARIO DO BANCO 
+         'USER': 'root', #DIGITE USUARIO DO BANCO
          'PASSWORD': 'root', #DIGITE SENHA DO BANCO
-=======
-         'USER': 'USER', #DIGITE USUARIO DO BANCO 
-         'PASSWORD': 'PASS', #DIGITE SENHA DO BANCO
->>>>>>> 9f532b12397d6ffd69bb2e8939b5ca4087275bcd
          'HOST': 'localhost',
          'PORT': '3306'
          }
@@ -157,21 +131,13 @@ LANGUAGE_CODE = 'pt-br'
 
 DATE_FORMAT = 'd/m/Y'
 
-<<<<<<< HEAD
 TIME_ZONE = 'America/Araguaina'
-=======
-TIME_ZONE = 'UTC'
->>>>>>> 9f532b12397d6ffd69bb2e8939b5ca4087275bcd
 
 USE_I18N = True
 
 USE_L10N = True
 
-<<<<<<< HEAD
 USE_TZ = False
-=======
-USE_TZ = True
->>>>>>> 9f532b12397d6ffd69bb2e8939b5ca4087275bcd
 
 DATE_INPUT_FORMATS = (
     '%d/%m/%Y',
@@ -184,8 +150,4 @@ DATE_INPUT_FORMATS = (
 
 STATIC_URL = '/jasmine/static/'
 
-<<<<<<< HEAD
 STATIC_ROOT = os.path.join(BASE_DIR, 'impressoes/static')
-=======
-STATIC_ROOT = '/home/cgti/Jasmine/impressoes/static'
->>>>>>> 9f532b12397d6ffd69bb2e8939b5ca4087275bcd

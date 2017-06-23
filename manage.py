@@ -2,7 +2,6 @@
 import os
 import sys
 
-<<<<<<< HEAD
 if __name__ == "__main__":
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "Jasmine.settings")
     try:
@@ -20,12 +19,4 @@ if __name__ == "__main__":
                 "forget to activate a virtual environment?"
             )
         raise
-=======
-
-if __name__ == "__main__":
-    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "Jasmine.settings")
-
-    from django.core.management import execute_from_command_line
-
->>>>>>> 9f532b12397d6ffd69bb2e8939b5ca4087275bcd
     execute_from_command_line(sys.argv)

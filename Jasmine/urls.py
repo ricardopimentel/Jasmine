@@ -4,11 +4,7 @@
 
 from django.conf.urls import url, include
 
-<<<<<<< HEAD
 from Jasmine.impressoes import views
-=======
-from impressoes import views
->>>>>>> 9f532b12397d6ffd69bb2e8939b5ca4087275bcd
 from django.contrib import admin
 
 
@@ -24,10 +20,7 @@ urlpatterns = [
     url(r'^jasmine/logout/$', views.logout),
     url(r'^jasmine/escaneados/(?P<printer>.+)/(?P<arquivo>.+)/(?P<action>.+)/$', views.get_scan, name='DocumentosDigitalizados'),
     url(r'^jasmine/convert/(?P<printer>.+)/(?P<arquivo>.+)$', views.ocr),
-<<<<<<< HEAD
     url(r'^jasmine/compress/(?P<printer>.+)/(?P<arquivo>.+)$', views.compress),
-=======
->>>>>>> 9f532b12397d6ffd69bb2e8939b5ca4087275bcd
     url(r'^jasmine/admin/$', views.admin),
     url(r'^jasmine/admin/ad/$', views.dados_ad),
     url(r'^jasmine/admin/digi/$', views.pasta_digi),
