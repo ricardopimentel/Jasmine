@@ -3,7 +3,7 @@
 from django import template
 import os
 import datetime
-from Jasmine.impressoes.models import config
+from Jasmine.core.models import config
 
 
 register = template.Library()

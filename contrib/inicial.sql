@@ -188,10 +188,10 @@ INSERT INTO `django_content_type` (`id`, `app_label`, `model`) VALUES
 (2, 'auth', 'permission'),
 (4, 'auth', 'user'),
 (5, 'contenttypes', 'contenttype'),
-(8, 'impressoes', 'config'),
-(7, 'impressoes', 'jobs_log'),
-(9, 'impressoes', 'logs'),
-(12, 'impressoes', 'tutoriais'),
+(8, 'core', 'config'),
+(7, 'core', 'jobs_log'),
+(9, 'core', 'logs'),
+(12, 'core', 'tutoriais'),
 (11, 'redirects', 'redirect'),
 (6, 'sessions', 'session'),
 (10, 'sites', 'site');
@@ -225,19 +225,19 @@ INSERT INTO `django_migrations` (`id`, `app`, `name`, `applied`) VALUES
 (9, 'auth', '0005_alter_user_last_login_null', '2016-11-25 20:29:54'),
 (10, 'auth', '0006_require_contenttypes_0002', '2016-11-25 20:29:54'),
 (11, 'auth', '0007_alter_validators_add_error_messages', '2016-11-25 20:29:54'),
-(12, 'impressoes', '0001_initial', '2016-11-25 20:29:55'),
+(12, 'core', '0001_initial', '2016-11-25 20:29:55'),
 (13, 'sites', '0001_initial', '2016-11-25 20:29:55'),
 (14, 'redirects', '0001_initial', '2016-11-25 20:29:57'),
 (15, 'sessions', '0001_initial', '2016-11-25 20:29:57'),
 (16, 'sites', '0002_alter_domain_unique', '2016-11-25 20:29:57'),
-(17, 'impressoes', '0002_auto_20161205_1139', '2016-12-05 14:39:21'),
-(18, 'impressoes', '0003_config_gadmin', '2016-12-05 14:42:06'),
-(19, 'impressoes', '0004_config_ou', '2016-12-05 17:19:18'),
-(20, 'impressoes', '0005_auto_20161207_1043', '2016-12-07 13:43:23'),
-(21, 'impressoes', '0006_auto_20161207_1239', '2016-12-07 15:39:29'),
-(22, 'impressoes', '0007_auto_20161207_1332', '2016-12-07 16:32:54'),
-(23, 'impressoes', '0008_auto_20161208_1056', '2016-12-08 13:57:09'),
-(24, 'impressoes', '0009_logs_ip', '2016-12-22 13:40:40');
+(17, 'core', '0002_auto_20161205_1139', '2016-12-05 14:39:21'),
+(18, 'core', '0003_config_gadmin', '2016-12-05 14:42:06'),
+(19, 'core', '0004_config_ou', '2016-12-05 17:19:18'),
+(20, 'core', '0005_auto_20161207_1043', '2016-12-07 13:43:23'),
+(21, 'core', '0006_auto_20161207_1239', '2016-12-07 15:39:29'),
+(22, 'core', '0007_auto_20161207_1332', '2016-12-07 16:32:54'),
+(23, 'core', '0008_auto_20161208_1056', '2016-12-08 13:57:09'),
+(24, 'core', '0009_logs_ip', '2016-12-22 13:40:40');
 
 -- --------------------------------------------------------
 

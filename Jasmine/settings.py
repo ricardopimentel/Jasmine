@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'Jasmine.impressoes',
+    'Jasmine.core',
+    'Jasmine.digitalizacoes',
     'pagination_bootstrap',
     #'mod_wsgi.server',
     'django.contrib.sites',
@@ -76,7 +77,7 @@ TEMPLATES = [
         'APP_DIRS': True,
         'OPTIONS': {
             'builtins': [
-                'Jasmine.impressoes.templatetags.impressoras_extras',
+                'Jasmine.core.templatetags.impressoras_extras',
             ],
             'context_processors': [
                 'django.template.context_processors.debug',
@@ -150,4 +151,4 @@ DATE_INPUT_FORMATS = (
 
 STATIC_URL = '/jasmine/static/'
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'impressoes/static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'core/static')

@@ -3,7 +3,7 @@
 # encoding: win-1252
 
 import ldap3 as ldap
-from Jasmine.impressoes.models import config
+from Jasmine.core.models import config
 
 class conexaoAD(object):
     

@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 from django.contrib import admin
 
-from Jasmine.impressoes.models import jobs_log
+from Jasmine.core.models import jobs_log
 
 
 # Register your models here.

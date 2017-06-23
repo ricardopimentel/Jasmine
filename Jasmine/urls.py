@@ -4,26 +4,27 @@
 
 from django.conf.urls import url, include
 
-from Jasmine.impressoes import views
+from Jasmine.core import views as core
+from Jasmine.digitalizacoes import views as digitalizacoes
 from django.contrib import admin
 
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^tinymce/', include('tinymce.urls')),
-    url(r'^jasmine/$', views.home),
-    url(r'^jasmine/relatorio/(?P<user_u>.+)/(?P<printer_u>.+)/(?P<host_u>.+)/$', views.relatorios),
-    url(r'^jasmine/viewlogs/(?P<user_u>.+)/(?P<action_u>.+)/(?P<host_u>.+)/$', views.viewlogs),
-    url(r'^jasmine/print/$', views.imprimir),
-    url(r'^jasmine/ajuda/(?P<topc>.+)$', views.ajuda),
-    url(r'^jasmine/login/$', views.login),
-    url(r'^jasmine/logout/$', views.logout),
-    url(r'^jasmine/escaneados/(?P<printer>.+)/(?P<arquivo>.+)/(?P<action>.+)/$', views.get_scan, name='DocumentosDigitalizados'),
-    url(r'^jasmine/convert/(?P<printer>.+)/(?P<arquivo>.+)$', views.ocr),
-    url(r'^jasmine/compress/(?P<printer>.+)/(?P<arquivo>.+)$', views.compress),
-    url(r'^jasmine/admin/$', views.admin),
-    url(r'^jasmine/admin/ad/$', views.dados_ad),
-    url(r'^jasmine/admin/digi/$', views.pasta_digi),
-    url(r'^jasmine/admin/tutoriais/add/$', views.add_tutorial),
-    url(r'^jasmine/admin/tutoriais/(?P<Action>.+)/(?P<Id>.+)$', views.view_tutorial),
+    url(r'^jasmine/$', core.home),
+    url(r'^jasmine/relatorio/(?P<user_u>.+)/(?P<printer_u>.+)/(?P<host_u>.+)/$', core.relatorios),
+    url(r'^jasmine/viewlogs/(?P<user_u>.+)/(?P<action_u>.+)/(?P<host_u>.+)/$', core.viewlogs),
+    url(r'^jasmine/print/$', core.imprimir),
+    url(r'^jasmine/ajuda/(?P<topc>.+)$', core.ajuda),
+    url(r'^jasmine/login/$', core.login),
+    url(r'^jasmine/logout/$', core.logout),
+    url(r'^jasmine/escaneados/(?P<printer>.+)/(?P<arquivo>.+)/(?P<action>.+)/$', digitalizacoes.digitalizacoes, name='DocumentosDigitalizados'),
+    url(r'^jasmine/convert/(?P<printer>.+)/(?P<arquivo>.+)$', digitalizacoes.ocr),
+    url(r'^jasmine/compress/(?P<printer>.+)/(?P<arquivo>.+)$', digitalizacoes.compress),
+    url(r'^jasmine/admin/$', core.admin),
+    url(r'^jasmine/admin/ad/$', core.dados_ad),
+    url(r'^jasmine/admin/digi/$', core.pasta_digi),
+    url(r'^jasmine/admin/tutoriais/add/$', core.add_tutorial),
+    url(r'^jasmine/admin/tutoriais/(?P<Action>.+)/(?P<Id>.+)$', core.view_tutorial),
 ]

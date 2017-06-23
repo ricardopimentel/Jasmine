@@ -5,7 +5,7 @@ import sys
 from ldap3 import Server, Connection, AUTO_BIND_NO_TLS, SUBTREE, ALL_ATTRIBUTES
 from ldap3.core.exceptions import LDAPInvalidCredentialsResult
 
-from Jasmine.impressoes.models import config
+from Jasmine.core.models import config
 
 class conexaoAD(object):
     
@@ -66,12 +66,12 @@ class conexaoAD(object):
         LDAP_PASSWORD = Password
         
         try:
-            with Connection(Server(self.endservidor, use_ssl=True),
+            with Connection(Server(Endservidor, use_ssl=True),
                             auto_bind=AUTO_BIND_NO_TLS,
                             read_only=True,
                             check_names=True,
-                            user=self.LDAP_USERNAME, password=self.password) as c:
-                user_filter = '(name=%s)' % self.username
+                            user=LDAP_USERNAME, password=Password) as c:
+                user_filter = '(name=%s)' % Username
                 c.search(search_base=self.base, search_filter=user_filter, search_scope=SUBTREE, attributes=['displayName', 'memberof'], get_operational_attributes=False)
 
             #print(c.response_to_json())

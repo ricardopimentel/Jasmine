@@ -15,8 +15,8 @@ import os
 import glob
 import sys
 import platform
-from Jasmine.impressoes.forms import LoginForm, DigiForm, AdForm, CriarTutoForm
-from Jasmine.impressoes.models import config, tutoriais, logs
+from Jasmine.core.forms import LoginForm, DigiForm, AdForm, CriarTutoForm
+from Jasmine.core.models import config, tutoriais, logs
 import pdfkit
 import shutil
 import pypdfocr.pypdfocr as OCR
@@ -24,15 +24,15 @@ import pypdfocr.pypdfocr as OCR
 # Create your views here.
 def home(request):
     cursor = connection.cursor()
-    cursor.execute("SELECT user, SUM(pages) as total FROM impressoes_jobs_log GROUP BY user HAVING total >= 0 ORDER BY total DESC LIMIT 5")
+    cursor.execute("SELECT user, SUM(pages) as total FROM core_jobs_log GROUP BY user HAVING total >= 0 ORDER BY total DESC LIMIT 5")
     top_users = cursor.fetchall()
-    cursor.execute("SELECT printer, SUM(pages) as total FROM impressoes_jobs_log GROUP BY printer HAVING total >= 0 ORDER BY total DESC LIMIT 5")
+    cursor.execute("SELECT printer, SUM(pages) as total FROM core_jobs_log GROUP BY printer HAVING total >= 0 ORDER BY total DESC LIMIT 5")
     top_printers = cursor.fetchall()
-    cursor.execute("SELECT host, SUM(pages) as total FROM impressoes_jobs_log GROUP BY host HAVING total >= 0 ORDER BY total DESC LIMIT 5")
+    cursor.execute("SELECT host, SUM(pages) as total FROM core_jobs_log GROUP BY host HAVING total >= 0 ORDER BY total DESC LIMIT 5")
     top_hosts = cursor.fetchall()
     
     # Preparando cores dos gráficos
-    cores_primarias = ['#F7464A', '#46BFBD', '#FDB45C', '#512DA8', '#C2185B']
+    cores_primarias = ['#F746A', '#46BFBD', '#FDB45C', '#512DA8', '#C2185B']
     cores_secundarias = ['#FF5A5E', '#5AD3D1', '#FFC870', '#673AB7', '#E91E63']
     
     return render(request, 'index.html', {
@@ -143,15 +143,15 @@ def relatorios(request, user_u, printer_u, host_u):
             
     #preparando consultas ao banco de dados
     cursor = connection.cursor()
-    cursor.execute("SELECT user FROM impressoes_jobs_log where user != '' GROUP BY user")
+    cursor.execute("SELECT user FROM core_jobs_log where user != '' GROUP BY user")
     top_users = cursor.fetchall()
-    cursor.execute("SELECT printer FROM impressoes_jobs_log where printer != '' GROUP BY printer")
+    cursor.execute("SELECT printer FROM core_jobs_log where printer != '' GROUP BY printer")
     top_printers = cursor.fetchall()
-    cursor.execute("SELECT host FROM impressoes_jobs_log where host != '' GROUP BY host")
+    cursor.execute("SELECT host FROM core_jobs_log where host != '' GROUP BY host")
     top_hosts = cursor.fetchall()
-    cursor.execute("SELECT date, user, printer, host, title, pages FROM `impressoes_jobs_log` WHERE user like '%"+user_u+"%' and printer like '%"+printer_u+"%' and host like '%"+host_u+"%' and (date BETWEEN '"+str(data_inicial)+" 00:00:00' and '"+str(data_final)+" 23:59:59' )")
+    cursor.execute("SELECT date, user, printer, host, title, pages FROM `core_jobs_log` WHERE user like '%"+user_u+"%' and printer like '%"+printer_u+"%' and host like '%"+host_u+"%' and (date BETWEEN '"+str(data_inicial)+" 00:00:00' and '"+str(data_final)+" 23:59:59' )")
     resultado = cursor.fetchall()
-    cursor.execute("SELECT SUM(pages) as total FROM `impressoes_jobs_log` WHERE user like '%"+user_u+"%' and printer like '%"+printer_u+"%' and host like '%"+host_u+"%' and (date BETWEEN '"+str(data_inicial)+" 00:00:00' and '"+str(data_final)+" 23:59:59' )")
+    cursor.execute("SELECT SUM(pages) as total FROM `core_jobs_log` WHERE user like '%"+user_u+"%' and printer like '%"+printer_u+"%' and host like '%"+host_u+"%' and (date BETWEEN '"+str(data_inicial)+" 00:00:00' and '"+str(data_final)+" 23:59:59' )")
     soma = cursor.fetchall()
     
     # Finalizando renderização da página
@@ -202,9 +202,9 @@ def imprimir(request):
         pass
     
     cursor = connection.cursor()
-    cursor.execute("SELECT date, user, printer, host, title, pages FROM `impressoes_jobs_log` WHERE user like '%"+user_u+"%' and printer like '%"+printer_u+"%' and host like '%"+host_u+"%' and (date BETWEEN '"+str(data_inicial)+" 00:00:00' and '"+str(data_final)+" 23:59:59' )")
+    cursor.execute("SELECT date, user, printer, host, title, pages FROM `core_jobs_log` WHERE user like '%"+user_u+"%' and printer like '%"+printer_u+"%' and host like '%"+host_u+"%' and (date BETWEEN '"+str(data_inicial)+" 00:00:00' and '"+str(data_final)+" 23:59:59' )")
     resultado = cursor.fetchall()
-    cursor.execute("SELECT SUM(pages) as total FROM `impressoes_jobs_log` WHERE user like '%"+user_u+"%' and printer like '%"+printer_u+"%' and host like '%"+host_u+"%' and (date BETWEEN '"+str(data_inicial)+" 00:00:00' and '"+str(data_final)+" 23:59:59' )")
+    cursor.execute("SELECT SUM(pages) as total FROM `core_jobs_log` WHERE user like '%"+user_u+"%' and printer like '%"+printer_u+"%' and host like '%"+host_u+"%' and (date BETWEEN '"+str(data_inicial)+" 00:00:00' and '"+str(data_final)+" 23:59:59' )")
     soma = cursor.fetchall()
     template = get_template("relat2print.html")
     
@@ -500,7 +500,7 @@ def pasta_digi(request):
                 Ip = x_forwarded_for.split(',')[-1].strip()
             else:
                 Ip = request.META.get('REMOTE_ADDR')
-            
+
             # Salva endereço anterior em variavel para passar ao log
             pasta_old = model.pasta_dig
             # Altera endereço da pasta no banco de dados
@@ -509,18 +509,19 @@ def pasta_digi(request):
             pasta_new = request.POST['pasta_dig']
             # comit
             model.save()
-            
+
             # salvar log
-            resumo = 'Administracao/Config Digitalizacoes/ foi alterado por: '+ request.session['userl']+ '\nO campo Endereco pasta digitalizacoes tinha o valor: \n    '+pasta_old+'\nFoi Alterado para: \n    '+pasta_new+'\n'
+            resumo = 'Administracao/Config Digitalizacoes/ foi alterado por: ' + request.session[
+                'userl'] + '\nO campo Endereco pasta digitalizacoes tinha o valor: \n    ' + pasta_old + '\nFoi Alterado para: \n    ' + pasta_new + '\n'
             log = logs(
-                data = datetime.datetime.now(),
-                action = 'Alt', 
-                item = 'Administração/Config AD', 
-                resumo = resumo,
-                user = request.session['userl'], 
-                ip = Ip)
+                data=datetime.datetime.now(),
+                action='Alt',
+                item='Administração/Config AD',
+                resumo=resumo,
+                user=request.session['userl'],
+                ip=Ip)
             log.save()
-            
+
             messages.success(request, 'Configurações salvas com sucesso!')
         return render(request, 'pasta_digi.html', {
             'form': form,
@@ -848,75 +849,3 @@ def viewlogs(request, user_u, action_u, host_u):
          'err': err,
          'itemselec': 'RELATÓRIOS',
         })
-
-
-def ocr(request, printer, arquivo):
-    msg = ''
-    # Tenta conexão com bd
-    try:
-        model = (config.objects.get(id=1))  # pegando configurações
-    except:
-        model = ''
-        msg = sys.exc_info()
-    try:
-        # passa o local do arquivo que será convertido pegando a raiz do banco de dados e concatenando com a impressora e nome do arquivo
-        arquivo_original = os.path.join(model.pasta_dig + '/' + printer, arquivo)
-        arquivo_destino = os.path.join(model.pasta_dig + '/temp/' + arquivo)
-        pasta_temp = os.path.join(model.pasta_dig + '/temp/')
-
-        print("copiando arquivo para pasta temporária")
-        shutil.copy2(arquivo_original, pasta_temp)
-
-        # Iniciando classe OCR
-        ocr = OCR.PyPDFOCR()
-
-        # adiciona um sufixo ao nome do arquivo
-        out_filename = arquivo_destino.replace(".pdf", "_ocr.pdf")
-        # caso já exista um arquivo com o nome do que será jerado, ele é excluido antes da conversão
-        if os.path.exists(out_filename):
-            os.remove(out_filename)  # removendo arquivo
-
-        print("Current directory: %s" % os.getcwd())
-
-        opts = [str(arquivo_destino), '-l por']# .encode('utf-8')] <- #Python 3 não permite
-        # convertendo
-        ocr.go(opts)
-        msg = "Arquivo '" + arquivo.replace(".pdf", "_ocr.pdf") + "' gerado com sucesso!"
-
-    except:
-        msg = 'Erro ao converter arquivo/n' + str(sys.exc_info())
-        raise
-
-    return render(request, 'escaneados.html', {
-        'title': 'Documentos Escaneados',
-        'redirect': msg,
-        'printer': printer,
-        'comprimir': 'comprimir',
-        'arquivo': arquivo.replace(".pdf", "_ocr.pdf"),
-    })
-
-
-def compress(request, printer, arquivo):
-    # Tenta conexão com bd
-    try:
-        model = (config.objects.get(id=1))  # pegando configurações
-        pasta_original = os.path.join(model.pasta_dig + '/' + printer)
-        pasta_temp = os.path.join(model.pasta_dig + '/temp/')
-        output = pasta_temp + "compacto-"+arquivo
-        path_arquivo = pasta_temp + arquivo
-        msg = ''
-
-        msg = os.system("gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/ebook -dNOPAUSE -dQUIET -dBATCH -sOutputFile=%s %s" % (output, path_arquivo))
-        os.remove(path_arquivo)
-
-        if msg:
-            messages.error(request, "Erro ao compactar o arquivo")
-        else:
-            print("copiando arquivo criado para a pasta original")
-            shutil.copy2(output, pasta_original)
-            messages.success(request, 'Arquivo "compacto-' + arquivo + '" Gerado com sucesso')
-    except:
-        model = ''
-        messages.error(request, sys.exc_info())
-
-    return redirect('/jasmine/escaneados/'+ printer+ '/*file*/*action*/')
