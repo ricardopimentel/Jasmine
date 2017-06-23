@@ -15,7 +15,7 @@ Sistema de visualização de relatórios de impressões.
 
 ```console
 git clone https://gitlab.com/smkbarbosa/Jasmine.git Jasmine
-cd wttd
+cd Jasmine
 python -m venv .Jasmine
 source .Jasmine/bin/activate
 pip install -r requirements.txt
