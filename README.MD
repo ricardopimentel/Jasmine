@@ -18,6 +18,8 @@ git clone https://gitlab.com/smkbarbosa/Jasmine.git Jasmine
 cd Jasmine
 python -m venv .Jasmine
 source .Jasmine/bin/activate
+pip install https://github.com/evernote/evernote-sdk-python3/archive/master.zip
+sudo apt-get install libmysqlclient-dev
 pip install -r requirements.txt
 cp contrib/env-sample .env
 nano .env
