@@ -3,6 +3,7 @@ from django.conf.urls import url, include
 from Jasmine.core import views as core
 from Jasmine.digitalizacoes import views as digitalizacoes
 from Jasmine.administracao import views as administracao
+from Jasmine.relatorios import views as relatorios
 from Jasmine.login import views as login
 from django.contrib import admin
 
@@ -11,10 +12,10 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^tinymce/', include('tinymce.urls')),
     url(r'^jasmine/$', core.home),
-    url(r'^jasmine/relatorio/(?P<user_u>.+)/(?P<printer_u>.+)/(?P<host_u>.+)/$', core.relatorios),
+    url(r'^jasmine/relatorio/(?P<user_u>.+)/(?P<printer_u>.+)/(?P<host_u>.+)/$', relatorios.relatorios),
     url(r'^jasmine/viewlogs/(?P<user_u>.+)/(?P<action_u>.+)/(?P<host_u>.+)/$', administracao.viewlogs),
-    url(r'^jasmine/print/$', core.imprimir),
-    url(r'^jasmine/ajuda/(?P<topc>.+)$', core.ajuda),
+    url(r'^jasmine/print/$', relatorios.imprimir),
+    url(r'^jasmine/ajuda/(?P<topc>.+)$', administracao.ajuda),
     url(r'^jasmine/login/$', login.login),
     url(r'^jasmine/logout/$', login.logout),
     url(r'^jasmine/escaneados/(?P<printer>.+)/(?P<arquivo>.+)/(?P<action>.+)/$', digitalizacoes.digitalizacoes, name='DocumentosDigitalizados'),

@@ -51,7 +51,7 @@ def login(request):
                 print('formulario não é válido - Fazer algo aqui posteriormente')
         else:  # se não veio nada no post cria uma instancia vazia
             form = AdForm(request)
-        return render(request, 'configAdInit.html', {
+        return render(request, 'admin_config_ad_inicial.html', {
             'title': 'Home',
             'form': form,
             'itemselec': 'HOME',
