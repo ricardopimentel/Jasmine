@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'Jasmine.core',
     'Jasmine.digitalizacoes',
+    'Jasmine.administracao',
     'pagination_bootstrap',
     #'mod_wsgi.server',
     'django.contrib.sites',
