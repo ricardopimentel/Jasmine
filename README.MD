@@ -2,8 +2,12 @@
 
 Sistema de visualização de relatórios de impressões.
 
-## Como utilizar?
+## Pré-requisitos
+- Ter instalado:
+    - cups+jasmine ([Parte 1](https://sempreupdate.com.br/2016/10/como-instalar-uma-impressora-em-distribuicoes-baseadas-no-ubuntu-ou-fedora-parte-1.html) e [Parte 2](https://sempreupdate.com.br/2016/11/gerando-relatorios-de-impressao-parte-2.html))
+    - mysql-server + phpmyadmin
 
+## Como utilizar?
 1 Clone o repositório.
 
 ```console
@@ -51,13 +55,20 @@ nano .env
 python manage.py migrate
 ```
 
-7 Execute os testes
+7 Substituir o arquivo do backend do jasmine no cups e configurar banco de dados
+
+```console
+sudo cp contrib/jasmine-backend /usr/lib/cups/backend/jasmine
+sudo nano /usr/lib/cups/backend/jasmine
+```
+
+8 Execute os testes
 
 ```console
 python manage.py test
 ```
 
-8 Testar configuração inicial
+9 Testar configuração inicial
 
 ```console
 python manage.py runmodwsgi
@@ -66,30 +77,30 @@ python manage.py runmodwsgi
    - Acessar pelo navegador o endereço: http://servidor:8000/jasmine
    - Se tudo ocorreu bem, será apresentada a página de configuração do sistema.
    
-9 Executar o Setup
+10 Executar o Setup
 
 ```console
 sudo python manage.py runmodwsgi --setup-only --port=8000 --user user --server-root=/etc/mod_wsgi-express-80
 ```
 
-10 Copie o arquivo jasmine-server para /etc/init.d/ e coloque na inicialização do sistema
+11 Copie o arquivo jasmine-server para /etc/init.d/ e coloque na inicialização do sistema
 
 ```console
 sudo cp contrib/jasmine-server /etc/init.d/jasmine
 sudo update-rc.d jasmine defaults
 ```
 
-11 Inicie o serviço
+12 Inicie o serviço
 
 ```console
 sudo /etc/init.d/jasmine start
 ```
 
-12 Acesse a página de configuração http://servidor:8000/jasmine
+13 Acesse a página de configuração http://servidor:8000/jasmine
 
 - Preencha os dados solicitados e clique em salvar
 
-13 Criar estrutura das pastas onde serão armazenados os arquivos digitalizados, uma pasta raiz e pastas internas para cada impressora e uma pasta para arquivos temporários temp.
+14 Criar estrutura das pastas onde serão armazenados os arquivos digitalizados, uma pasta raiz e pastas internas para cada impressora e uma pasta para arquivos temporários temp.
 Exemplo:
 
 ```tree
@@ -101,13 +112,13 @@ Exemplo:
             temp/
 ```
         
-14 Compartilhar as pastas das impressoras.
+15 Compartilhar as pastas das impressoras.
 
 ```console
 
 ```
 
-15 Configurar local das digitalizações no sitema.
+16 Configurar local das digitalizações no sitema.
 
 - Faça Login
 - Acesse o menu Administração
