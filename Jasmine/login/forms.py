@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from django import forms
 
 from Jasmine.core.libs.conexaoAD3 import conexaoAD

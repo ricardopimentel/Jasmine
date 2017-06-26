@@ -371,7 +371,7 @@ def viewlogs(request, user_u, action_u, host_u):
             data_inicial) + " 00:00:00' and '" + str(data_final) + " 23:59:59' )")
     resultado = cursor.fetchall()
     # Finalizando renderização da página
-    return render(request, 'viewlogs.html', {
+    return render(request, 'admin_view_logs.html', {
         'title': 'Relatório',
         'top_users': top_users,
         'top_actions': top_actions,

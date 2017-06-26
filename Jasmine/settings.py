@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'Jasmine.core',
     'Jasmine.digitalizacoes',
     'Jasmine.administracao',
+    'Jasmine.login',
     'pagination_bootstrap',
     #'mod_wsgi.server',
     'django.contrib.sites',
