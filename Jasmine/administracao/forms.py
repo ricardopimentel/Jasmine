@@ -27,7 +27,7 @@ class AdForm(forms.ModelForm):
 
     class Meta:  # Define os campos vindos do Model
         model = config
-        fields = ('dominio', 'endservidor', 'gadmin', 'ou',)
+        fields = ('dominio', 'endservidor', 'gadmin', 'ou', 'filter',)
 
     def __init__(self, request, *args,
                  **kwargs):  # INIT define caracteristicas para os campos de formulário vindos do Model (banco de dados)
@@ -59,12 +59,13 @@ class AdForm(forms.ModelForm):
         Endservidor = cleaned_data.get("endservidor")
         Gadmin = cleaned_data.get("gadmin")
         Ou = cleaned_data.get("ou")
+        Filter = cleaned_data.get("filter")
 
         if Usuario and Senha:  # Usuário e senha OK
             # Cria Conexão LDAP ou = 'OU=ca-paraiso, OU=reitoria, OU=ifto, DC=ifto, DC=local'
-            c = conexaoAD(Usuario, Senha, Ou)
+            c = conexaoAD(Usuario, Senha, Ou, Filter)
             result = c.PrimeiroLogin(Usuario, Senha, Dominio,
-                                     Endservidor)  # tenta login no ldap e salva resultado em result
+                                     Endservidor, Filter)  # tenta login no ldap e salva resultado em result
             if (result == ('i')):  # Credenciais invalidas (usuario e/ou senha)
                 # Adiciona erro na validação do formulário
                 raise forms.ValidationError("Usuário ou senha incorretos", code='invalid')
@@ -100,11 +101,12 @@ class AdForm(forms.ModelForm):
                     conf.endservidor = Endservidor
                     conf.gadmin = Gadmin
                     conf.ou = Ou
-                    lista_new = (Dominio, Endservidor, Gadmin, Ou)
+                    conf.filter = Filter
+                    lista_new = (Dominio, Endservidor, Gadmin, Ou, Filter)
                     conf.save()
                     # Salva log
                     # Criar resumo
-                    lista_rotulos = ('Domínio', 'Endereço Servidor', 'Grupo Administradores', 'Base')
+                    lista_rotulos = ('Domínio', 'Endereço Servidor', 'Grupo Administradores', 'Base', 'Filtro')
                     # Procurar outra forma de pegar o indice do for
                     i = 0  # estou criando um contador
                     for item in lista_new:
@@ -123,7 +125,7 @@ class AdForm(forms.ModelForm):
                             ip=Ip)
                         log.save()
                 except ObjectDoesNotExist:  # caso não exista nada no bd cria um id 1 com os dados passados
-                    conf = config(id=1, dominio=Dominio, endservidor=Endservidor, gadmin=Gadmin, ou=Ou)
+                    conf = config(id=1, dominio=Dominio, endservidor=Endservidor, gadmin=Gadmin, ou=Ou, filter=Filter)
                     conf.save()
                     # except:
                     # raise forms.ValidationError(sys.exc_info())

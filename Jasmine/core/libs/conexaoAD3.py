@@ -9,7 +9,7 @@ from Jasmine.core.models import config
 
 class conexaoAD(object):
     
-    def __init__(self, username, password, base):
+    def __init__(self, username, password, base, filter):
         try:
             conf = config.objects.get(id=1)
             self.username = username
@@ -17,12 +17,14 @@ class conexaoAD(object):
             self.base = base
             self.dominio = conf.dominio
             self.endservidor = conf.endservidor
+            self.filter = conf.filter
         except:
             self.username = username
             self.password = password
             self.base = base
             self.dominio = ''
             self.endservidor = ''
+            self.felter = ''
             
         # servidor ad
         self.LDAP_SERVER = 'ldap://%s' % self.endservidor
@@ -38,7 +40,8 @@ class conexaoAD(object):
                             read_only=True,
                             check_names=True,
                             user=self.LDAP_USERNAME, password=self.password) as c:
-                user_filter = '(name=%s)' % self.username
+                user_filter = '(&' + self.filter + '(|(name=%s)))' % self.username
+                print(user_filter)
                 c.search(search_base=self.base, search_filter=user_filter, search_scope=SUBTREE, attributes=['displayName', 'memberof'], get_operational_attributes=False)
 
             #print(c.response_to_json())
@@ -57,13 +60,11 @@ class conexaoAD(object):
                 print(sys.exc_info())
                 return 'n'  # Servidor não encotrado
 
-    def PrimeiroLogin(self, Username, Password, Dominio, Endservidor):
+    def PrimeiroLogin(self, Username, Password, Dominio, Endservidor, Filtro):
         # servidor ad
         LDAP_SERVER = 'ldap://%s' % Endservidor
         # nome completo do usuario no AD
         LDAP_USERNAME = Username+ '@'+ Dominio
-        # sua senha
-        LDAP_PASSWORD = Password
         
         try:
             with Connection(Server(Endservidor, use_ssl=True),
@@ -71,11 +72,9 @@ class conexaoAD(object):
                             read_only=True,
                             check_names=True,
                             user=LDAP_USERNAME, password=Password) as c:
-                user_filter = '(name=%s)' % Username
+                user_filter = '(&'+Filtro+'(name=%s)' % Username
                 c.search(search_base=self.base, search_filter=user_filter, search_scope=SUBTREE, attributes=['displayName', 'memberof'], get_operational_attributes=False)
 
-            #print(c.response_to_json())
-            #print(c.result)
             res = (c.response)
             print(res)
             if res:

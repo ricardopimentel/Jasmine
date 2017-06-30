@@ -59,6 +59,7 @@ python manage.py migrate
 
 ```console
 sudo cp contrib/jasmine-backend /usr/lib/cups/backend/jasmine
+sudo chmod 755 /usr/lib/cups/backend/jasmine
 sudo nano /usr/lib/cups/backend/jasmine
 ```
 
