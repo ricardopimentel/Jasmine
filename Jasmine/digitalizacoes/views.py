@@ -84,7 +84,7 @@ def digitalizacoes(request, printer, arquivo, action):  # Se for URL padrão (mo
                                    str(printer), arquivo, str(request.session['userl'])), user=request.session['userl'],
                                    ip=Ip)
                         log.save()
-
+                        os.chdir(BASE_DIR)
                         return response
                     except:
                         pdf.closed
@@ -110,7 +110,7 @@ def digitalizacoes(request, printer, arquivo, action):  # Se for URL padrão (mo
                                    str(printer), arquivo, str(request.session['userl'])), user=request.session['userl'],
                                    ip=Ip)
                         log.save()
-
+                        os.chdir(BASE_DIR)
                         return response
                     except:
                         return render(request, 'digitalizacoes/digitalizacoes.html', {
@@ -133,7 +133,7 @@ def digitalizacoes(request, printer, arquivo, action):  # Se for URL padrão (mo
                                    str(printer), arquivo, str(request.session['userl'])), user=request.session['userl'],
                                    ip=Ip)
                         log.save()
-
+                        os.chdir(BASE_DIR)
                         # Recarrega página com mensagem de suesso
                         return render(request, 'digitalizacoes/digitalizacoes.html', {
                             'title': 'Documentos Escaneados',
@@ -153,7 +153,7 @@ def digitalizacoes(request, printer, arquivo, action):  # Se for URL padrão (mo
                                    resumo='Arquivo não foi removido, err: %s' % (str(sys.exc_info()[1])),
                                    user=request.session['userl'], ip=Ip)
                         log.save()
-
+                        os.chdir(BASE_DIR)
                         # return redirect('/jasmine/escaneados/'+printer+'/*file*/*action*/', kwargs={'action': err})
                         return render(request, 'digitalizacoes/digitalizacoes.html', {
                             'title': 'Documentos Escaneados',
@@ -164,7 +164,7 @@ def digitalizacoes(request, printer, arquivo, action):  # Se for URL padrão (mo
                         pdf.closed
 
                         messages.error(request, str(sys.exc_info()[1]))
-
+                        os.chdir(BASE_DIR)
                         # return redirect('/jasmine/escaneados/'+printer+'/*file*/*action*/', kwargs={'action': err})
                         return render(request, 'digitalizacoes/digitalizacoes.html', {
                             'title': 'Documentos Escaneados',
