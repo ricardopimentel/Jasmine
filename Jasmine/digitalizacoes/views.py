@@ -47,10 +47,11 @@ def digitalizacoes(request, printer, arquivo, action):  # Se for URL padrão (mo
         nomes_arquivos_jpg = glob.glob('*jpg')  # Arquivos jpg
         nomes_arquivos_jpg.sort(key=os.path.getmtime, reverse=True)  # Ordenando por data reversa
         nomes_arquivos_pdf = glob.glob('*pdf')  # Arquivos pdf
-        nomes_arquivos_pdf.sort(key=os.path.getmtime,
-                                reverse=True)  # Ordenando por data reversa
+        nomes_arquivos_pdf.sort(key=os.path.getmtime, reverse=True)  # Ordenando por data reversa
         # Verificar se há arquivos sendo construidos
         nomes_arquivos_load = glob.glob('*')
+        os.chdir(BASE_DIR)
+
         load = []
 
         for fili in nomes_arquivos_load:
@@ -63,7 +64,6 @@ def digitalizacoes(request, printer, arquivo, action):  # Se for URL padrão (mo
         for fff in nomes_arquivos:
             lista.append(fff)  # .decode("latin-1"))<-No python3 isto não funciona
         nomes_arquivos = lista
-        # Acentos não funcionam fazer algo para solucionar isso
 
         os.chdir(BASE_DIR)
 
@@ -172,6 +172,7 @@ def digitalizacoes(request, printer, arquivo, action):  # Se for URL padrão (mo
                             'printer': printer,
                         })
 
+        os.chdir(BASE_DIR)
         return render(request, 'digitalizacoes/digitalizacoes.html', {
             'title': 'Documentos Escaneados',
             'nomes_arquivos': nomes_arquivos,
