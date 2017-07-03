@@ -41,13 +41,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'Jasmine.relatorios',
     'pagination_bootstrap',
     'django.contrib.sites',
     'django.contrib.redirects',
     'Jasmine.core',
-    'Jasmine.scans',
+    'Jasmine.digitalizacoes',
     'Jasmine.administracao',
+    'Jasmine.relatorios',
     'Jasmine.login',
 ]
 

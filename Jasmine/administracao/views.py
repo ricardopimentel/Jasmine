@@ -40,7 +40,7 @@ def pasta_digi(request):
 
             # salvar log
             resumo = 'Administracao/Config Digitalizacoes/ foi alterado por: ' + request.session[
-                'userl'] + '\nO campo Endereco pasta scans tinha o valor: \n    ' + pasta_old + '\nFoi Alterado para: \n    ' + pasta_new + '\n'
+                'userl'] + '\nO campo Endereco pasta digitalizacoes tinha o valor: \n    ' + pasta_old + '\nFoi Alterado para: \n    ' + pasta_new + '\n'
             log = logs(
                 data=datetime.datetime.now(),
                 action='Alt',

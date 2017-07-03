@@ -26,7 +26,7 @@ def digitalizacoes(request, printer, arquivo, action):  # Se for URL padrão (mo
         except:
             messages.error(request, str(sys.exc_info()[1]))
             err = str(sys.exc_info()[1])
-        return render(request, 'escaneados.html', {
+        return render(request, 'digitalizacoes/digitalizacoes.html', {
             'title': 'Documentos Escaneados',
             'nomes_folders': nomes_folders,
             'err': err,
@@ -83,7 +83,7 @@ def digitalizacoes(request, printer, arquivo, action):  # Se for URL padrão (mo
                         return response
                     except:
                         pdf.closed
-                        return render(request, 'escaneados.html', {
+                        return render(request, 'digitalizacoes/digitalizacoes.html', {
                             'title': 'Documentos Escaneados',
                             'nomes_arquivos': nomes_arquivos,
                             'msg': sys.exc_info(),
@@ -108,7 +108,7 @@ def digitalizacoes(request, printer, arquivo, action):  # Se for URL padrão (mo
 
                         return response
                     except:
-                        return render(request, 'escaneados.html', {
+                        return render(request, 'digitalizacoes/digitalizacoes.html', {
                             'title': 'Documentos Escaneados',
                             'nomes_arquivos': nomes_arquivos,
                             'msg': sys.exc_info(),
@@ -130,7 +130,7 @@ def digitalizacoes(request, printer, arquivo, action):  # Se for URL padrão (mo
                         log.save()
 
                         # Recarrega página com mensagem de suesso
-                        return render(request, 'escaneados.html', {
+                        return render(request, 'digitalizacoes/digitalizacoes.html', {
                             'title': 'Documentos Escaneados',
                             'nomes_arquivos': nomes_arquivos,
                             'msg': 'Excluído com sucesso!',
@@ -150,7 +150,7 @@ def digitalizacoes(request, printer, arquivo, action):  # Se for URL padrão (mo
                         log.save()
 
                         # return redirect('/jasmine/escaneados/'+printer+'/*file*/*action*/', kwargs={'action': err})
-                        return render(request, 'escaneados.html', {
+                        return render(request, 'digitalizacoes/digitalizacoes.html', {
                             'title': 'Documentos Escaneados',
                             'nomes_arquivos': nomes_arquivos,
                             'printer': printer,
@@ -161,13 +161,13 @@ def digitalizacoes(request, printer, arquivo, action):  # Se for URL padrão (mo
                         messages.error(request, str(sys.exc_info()[1]))
 
                         # return redirect('/jasmine/escaneados/'+printer+'/*file*/*action*/', kwargs={'action': err})
-                        return render(request, 'escaneados.html', {
+                        return render(request, 'digitalizacoes/digitalizacoes.html', {
                             'title': 'Documentos Escaneados',
                             'nomes_arquivos': nomes_arquivos,
                             'printer': printer,
                         })
 
-        return render(request, 'escaneados.html', {
+        return render(request, 'digitalizacoes/digitalizacoes.html', {
             'title': 'Documentos Escaneados',
             'nomes_arquivos': nomes_arquivos,
             'printer': printer,
@@ -211,7 +211,7 @@ def ocr(request, printer, arquivo):
         msg = 'Erro ao converter arquivo/n' + str(sys.exc_info())
         raise
 
-    return render(request, 'escaneados.html', {
+    return render(request, 'digitalizacoes/digitalizacoes.html', {
         'title': 'Documentos Escaneados',
         'redirect': msg,
         'printer': printer,

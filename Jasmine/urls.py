@@ -1,7 +1,7 @@
 from django.conf.urls import url, include
 
 from Jasmine.core import views as core
-from Jasmine.scans import views as digitalizacoes
+from Jasmine.digitalizacoes import views as digitalizacoes
 from Jasmine.administracao import views as administracao
 from Jasmine.relatorios import views as relatorios
 from Jasmine.login import views as login
