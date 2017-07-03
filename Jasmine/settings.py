@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'Jasmine.digitalizacoes',
     'Jasmine.administracao',
     'Jasmine.login',
+    'Jasmine.relatorios'
 ]
 
 MIDDLEWARE_CLASSES = [
