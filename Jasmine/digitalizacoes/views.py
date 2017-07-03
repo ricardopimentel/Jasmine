@@ -65,6 +65,8 @@ def digitalizacoes(request, printer, arquivo, action):  # Se for URL padrão (mo
         nomes_arquivos = lista
         # Acentos não funcionam fazer algo para solucionar isso
 
+        os.chdir(BASE_DIR)
+
         # Abrindo Arquivo
         url = raiz + '/' + printer + '/' + arquivo
         if (not (arquivo == '*file*')):
