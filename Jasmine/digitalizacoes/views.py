@@ -12,7 +12,7 @@ from Jasmine.core.models import config, logs
 
 
 def digitalizacoes(request, printer, arquivo, action):  # Se for URL padrão (mostrar pastas)
-    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    BASE_DIR = os.path.dirname((os.path.abspath(__file__)))
     err = ''
     # Pega a pasta raiz do banco de dados
     raiz = (config.objects.get(id=1)).pasta_dig
