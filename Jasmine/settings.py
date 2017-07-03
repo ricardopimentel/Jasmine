@@ -40,15 +40,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'Jasmine.relatorios',
+    'pagination_bootstrap',
+    'django.contrib.sites',
+    'django.contrib.redirects',
     'Jasmine.core',
     'Jasmine.digitalizacoes',
     'Jasmine.administracao',
     'Jasmine.login',
-    'Jasmine.relatorios',
-    'pagination_bootstrap',
-    #'mod_wsgi.server',
-    'django.contrib.sites',
-    'django.contrib.redirects',
 ]
 
 MIDDLEWARE_CLASSES = [
