@@ -46,7 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'django.contrib.redirects',
     'Jasmine.core',
-    'Jasmine.digitalizacoes',
+    'Jasmine.scans',
     'Jasmine.administracao',
     'Jasmine.login',
 ]
