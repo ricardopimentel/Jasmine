@@ -12,7 +12,7 @@ from Jasmine.core.models import config, logs
 
 
 def digitalizacoes(request, printer, arquivo, action):  # Se for URL padrão (mostrar pastas)
-    BASE_DIR = os.path.dirname((os.path.abspath(__file__)))
+    BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
     err = ''
     # Pega a pasta raiz do banco de dados
     raiz = (config.objects.get(id=1)).pasta_dig
@@ -25,6 +25,7 @@ def digitalizacoes(request, printer, arquivo, action):  # Se for URL padrão (mo
             nomes_folders = glob.glob('*/')
             nomes_folders = sorted(nomes_folders)  # Ordenando por nome
             os.chdir(BASE_DIR)
+            print(BASE_DIR)
         except:
             messages.error(request, str(sys.exc_info()[1]))
             err = str(sys.exc_info()[1])

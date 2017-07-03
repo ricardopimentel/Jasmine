@@ -47,7 +47,6 @@ INSTALLED_APPS = [
     'Jasmine.core',
     'Jasmine.digitalizacoes',
     'Jasmine.administracao',
-    'Jasmine.relatorios',
     'Jasmine.login',
 ]
 
