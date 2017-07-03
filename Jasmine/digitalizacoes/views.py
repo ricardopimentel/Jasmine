@@ -26,6 +26,8 @@ def digitalizacoes(request, printer, arquivo, action):  # Se for URL padrão (mo
         except:
             messages.error(request, str(sys.exc_info()[1]))
             err = str(sys.exc_info()[1])
+        BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        os.chdir(BASE_DIR)
         return render(request, 'digitalizacoes/digitalizacoes.html', {
             'title': 'Documentos Escaneados',
             'nomes_folders': nomes_folders,
