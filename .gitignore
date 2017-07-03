@@ -1,5 +1,6 @@
 # Byte-compiled / optimized / DLL files
 *.py[cod]
+__pycache__/
 
 .Jasmine
 .idea
@@ -8,4 +9,6 @@
 *pyc
 staticfiles
 .ipynb_checkpoints/
+
+
 
