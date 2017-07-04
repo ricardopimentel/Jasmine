@@ -7,233 +7,142 @@ import glob
 import datetime
 from django.contrib import messages
 from django.http import HttpResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, resolve_url as r, redirect
 from Jasmine.core.models import config, logs
 
 
-def digitalizacoes(request, printer, arquivo, action):  # Se for URL padrão (mostrar pastas)
-    BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+def digitalizacoes(request, u_printer, u_filename, u_action):
+    '''Faz o controle das digitalizações, exibe os arquivos digitalizados separados por pasta'''
+    list_folders = []
+    list_files = []
+    if u_printer == '*printer*':
+        u_printer = ''
+    if u_filename == '*file*':
+        u_filename = ''
+    if u_action == '*action*':
+        u_action = ''
     err = ''
-    # Pega a pasta raiz do banco de dados
     raiz = (config.objects.get(id=1)).pasta_dig
-    # Verificar se a URL é a URL padrão ( Mostrar a raiz)
-    if (printer == '*printer*' and arquivo == '*file*' and action == '*action*'):
-        nomes_folders = []
+
+    if raiz:
+        for root, dirs, files in os.walk(os.path.join(raiz, u_printer)):# faz varredura nos arquivos e diretórios da raiz
+            if not u_printer:# URL padrão não vem printer especificada, mostrar lista de pastas
+                for dirName in dirs:
+                    list_folders.append(dirName)
+                break# Quebra para não executar recursividade
+            else:# Se entrar aqui, está dentro de uma pasta, exibir arquivos
+                files.sort(key=lambda x: os.path.getmtime(os.path.join(root, x)), reverse=True)# Ordenar por data reversa, ultimos na frente
+                for fileName in files:
+                    list_files.append(fileName)
+                break# Quebra para não executar recursividade
+    else:
+        err = 'Caminho das digitalizações não está cadastrado'
+
+    # Verificar tipo de ação a ser realizada com o arquivo
+    if u_action:
+        if u_action == 'ope':
+            return abrir_arquivo(request, u_filename, u_printer, raiz)
+        elif u_action == 'dow':
+            return baixar_arquivo(request, u_filename, u_printer, raiz)
+        elif u_action == 'del':
+            remover_arquivo(request, u_filename, u_printer, raiz, list_files)
+            return redirect(r('DocumentosDigitalizados', u_printer=u_printer, u_filename='*file*', u_action='*action*'))
+
+    return render(request, 'digitalizacoes/digitalizacoes.html', {
+        'title': 'Documentos Escaneados',
+        'list_folders': list_folders,
+        'list_files': list_files,
+        'printer': u_printer,
+        'err': err,
+    })
+
+
+def abrir_arquivo(request, filename, printer, raiz):
+    url = raiz + '/' + printer + '/' + filename
+    try:
+        with open(url, 'rb') as file:
+            if (filename[-3::] == 'pdf'):
+                response = HttpResponse(file.read(), content_type='application/pdf')
+            elif (filename[-3::] == 'jpg'):
+                response = HttpResponse(file.read(), content_type='open')
+            response['Content-Disposition'] = 'inline;filename=' + filename
+        file.close()
+    except:
+        messages.error(request, "Erro ao abrir o arquivo: " + str(sys.exc_info()[1]))
+    return response
+
+
+def baixar_arquivo(request, filename, printer, raiz):
+    url = raiz + '/' + printer + '/' + filename
+    try:
+        with open(url, 'rb') as file:
+            response = HttpResponse(file.read(), content_type='application/force-download')
+            response['Content-Disposition'] = 'inline;filename=' + filename
+        file.close()
+    except:
+        messages.error(request, "Erro ao baixar o arquivo: " + str(sys.exc_info()[1]))
+    return response
+
+
+def remover_arquivo(request, filename, printer, raiz, list_files):
+    url = raiz + '/' + printer + '/' + filename
+    try:
+        os.remove(url)
+        list_files.remove(filename)
+        messages.success(request, 'Arquivo "'+ filename+ '" excluído com sucesso!')
+    except:
+        messages.error(request, "Erro ao excluir o arquivo: "+ str(sys.exc_info()[1]))
+
+
+def ocr(request, u_printer, u_filename):
+    '''Extrai texto das imagem do pdf e as adiciona em uma camada trasparente sobre a imagem original'''
+    raiz = (config.objects.get(id=1)).pasta_dig
+    if raiz:
         try:
-            # Seta diretório
-            os.chdir(raiz)
-            nomes_folders = glob.glob('*/')
-            nomes_folders = sorted(nomes_folders)  # Ordenando por nome
-            os.chdir(BASE_DIR)
-            print(BASE_DIR)
+            # passa o local do arquivo que será convertido pegando a raiz do banco de dados e concatenando com a impressora e nome do arquivo
+            arquivo_original = os.path.join(raiz + '/' + u_printer, u_filename)
+            arquivo_destino = os.path.join(raiz + '/temp/' + u_filename)
+            pasta_temp = os.path.join(raiz + '/temp/')
+
+            #copiando arquivo para pasta temporária
+            shutil.copy2(arquivo_original, pasta_temp)
+
+            # Iniciando classe OCR
+            ocr = OCR.PyPDFOCR()
+
+            # adiciona um sufixo ao nome do arquivo
+            out_filename = arquivo_destino.replace(".pdf", "_ocr.pdf")
+
+            # caso já exista um arquivo com o nome do que será gerado, ele é excluido antes da conversão
+            if os.path.exists(out_filename):
+                os.remove(out_filename)  # removendo arquivo
+
+            opts = [str(arquivo_destino), '-l por']
+
+            # convertendo
+            ocr.go(opts)
+            msg = "Arquivo '" + u_filename.replace(".pdf", "_ocr.pdf") + "' gerado com sucesso!"
+
         except:
-            messages.error(request, str(sys.exc_info()[1]))
-            err = str(sys.exc_info()[1])
-        return render(request, 'digitalizacoes/digitalizacoes.html', {
-            'title': 'Documentos Escaneados',
-            'nomes_folders': nomes_folders,
-            'err': err,
-        })
-    else:  # Se vieram comandos pela url mostrar arquivos
-        # pegar endereço IP do cliente
-        # Ip = GetIp().get_client_ip(request)
-        x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
-        if x_forwarded_for:
-            Ip = x_forwarded_for.split(',')[-1].strip()
-        else:
-            Ip = request.META.get('REMOTE_ADDR')
-
-        os.chdir(raiz + '/' + printer)
-        nomes_arquivos_jpg = glob.glob('*jpg')  # Arquivos jpg
-        nomes_arquivos_jpg.sort(key=os.path.getmtime, reverse=True)  # Ordenando por data reversa
-        nomes_arquivos_pdf = glob.glob('*pdf')  # Arquivos pdf
-        nomes_arquivos_pdf.sort(key=os.path.getmtime, reverse=True)  # Ordenando por data reversa
-        # Verificar se há arquivos sendo construidos
-        nomes_arquivos_load = glob.glob('*')
-        os.chdir(BASE_DIR)
-
-        load = []
-
-        for fili in nomes_arquivos_load:
-            if (not (fili[-3::] == 'pdf') and not (fili[-3::] == 'png') and not (fili[-3::] == 'jpg') and not (
-                fili[-3::] == 'tif') and not (fili[-3::] == 'wps') and not (fili[-2::] == 'db')):
-                load.append(fili)
-        # concatenando arquivos
-        nomes_arquivos = load + nomes_arquivos_pdf + nomes_arquivos_jpg
-        lista = []
-        for fff in nomes_arquivos:
-            lista.append(fff)  # .decode("latin-1"))<-No python3 isto não funciona
-        nomes_arquivos = lista
-
-        os.chdir(BASE_DIR)
-
-        # Abrindo Arquivo
-        url = raiz + '/' + printer + '/' + arquivo
-        if (not (arquivo == '*file*')):
-            with open(url, 'rb') as pdf:
-                if (action == 'dow'):  # Forçar Download
-                    try:
-                        # Tenta ler arquivo
-                        response = HttpResponse(pdf.read(), content_type='application/force-download')
-                        response['Content-Disposition'] = 'inline;filename=' + arquivo
-                        pdf.closed
-                        # Salva log
-                        log = logs(data=datetime.datetime.now(), action='Down',
-                                   item='Digitalizacoes/%s/%s' % (str(printer), arquivo),
-                                   resumo='Digitalizacoes/%s/%s foi baixado por %s' % (
-                                   str(printer), arquivo, str(request.session['userl'])), user=request.session['userl'],
-                                   ip=Ip)
-                        log.save()
-                        os.chdir(BASE_DIR)
-                        return response
-                    except:
-                        pdf.closed
-                        return render(request, 'digitalizacoes/digitalizacoes.html', {
-                            'title': 'Documentos Escaneados',
-                            'nomes_arquivos': nomes_arquivos,
-                            'msg': sys.exc_info(),
-                            'printer': printer,
-                        })
-                elif (action == 'ope'):  # Abrir Arquivo
-                    try:
-                        # Tenta ler arquivo
-                        if (arquivo[-3::] == 'pdf'):
-                            response = HttpResponse(pdf.read(), content_type='application/pdf')
-                        elif (arquivo[-3::] == 'jpg'):
-                            response = HttpResponse(pdf.read(), content_type='open')
-                        response['Content-Disposition'] = 'inline;filename=' + arquivo
-                        pdf.closed
-                        # Salva log
-                        log = logs(data=datetime.datetime.now(), action='Vis',
-                                   item='Digitalizacoes/%s/%s' % (str(printer), arquivo),
-                                   resumo='Digitalizacoes/%s/%s foi visualizado por %s' % (
-                                   str(printer), arquivo, str(request.session['userl'])), user=request.session['userl'],
-                                   ip=Ip)
-                        log.save()
-                        os.chdir(BASE_DIR)
-                        return response
-                    except:
-                        return render(request, 'digitalizacoes/digitalizacoes.html', {
-                            'title': 'Documentos Escaneados',
-                            'nomes_arquivos': nomes_arquivos,
-                            'msg': sys.exc_info(),
-                            'printer': printer,
-                        })
-                elif (action == 'del'):  # Excluir arquivo
-                    try:
-                        # Remover arquivo
-                        pdf.closed
-                        os.remove(url)
-                        nomes_arquivos.remove(arquivo)
-
-                        # Salva log
-                        log = logs(data=datetime.datetime.now(), action='Exc',
-                                   item='Digitalizacoes/%s/%s' % (str(printer), arquivo),
-                                   resumo='Digitalizacoes/%s/%s foi excluido por %s' % (
-                                   str(printer), arquivo, str(request.session['userl'])), user=request.session['userl'],
-                                   ip=Ip)
-                        log.save()
-                        os.chdir(BASE_DIR)
-                        # Recarrega página com mensagem de suesso
-                        return render(request, 'digitalizacoes/digitalizacoes.html', {
-                            'title': 'Documentos Escaneados',
-                            'nomes_arquivos': nomes_arquivos,
-                            'msg': 'Excluído com sucesso!',
-                            'image_snack': "excluir.png",
-                            'printer': printer,
-                        })
-                    except WindowsError:
-                        pdf.closed
-
-                        messages.error(request, str(sys.exc_info()[1]))
-
-                        # Salva log erro windows
-                        log = logs(data=datetime.datetime.now(), action='Err',
-                                   item='Digitalizacoes/%s/%s' % (str(printer), arquivo),
-                                   resumo='Arquivo não foi removido, err: %s' % (str(sys.exc_info()[1])),
-                                   user=request.session['userl'], ip=Ip)
-                        log.save()
-                        os.chdir(BASE_DIR)
-                        # return redirect('/jasmine/escaneados/'+printer+'/*file*/*action*/', kwargs={'action': err})
-                        return render(request, 'digitalizacoes/digitalizacoes.html', {
-                            'title': 'Documentos Escaneados',
-                            'nomes_arquivos': nomes_arquivos,
-                            'printer': printer,
-                        })
-                    except:
-                        pdf.closed
-
-                        messages.error(request, str(sys.exc_info()[1]))
-                        os.chdir(BASE_DIR)
-                        # return redirect('/jasmine/escaneados/'+printer+'/*file*/*action*/', kwargs={'action': err})
-                        return render(request, 'digitalizacoes/digitalizacoes.html', {
-                            'title': 'Documentos Escaneados',
-                            'nomes_arquivos': nomes_arquivos,
-                            'printer': printer,
-                        })
-
-        os.chdir(BASE_DIR)
-        return render(request, 'digitalizacoes/digitalizacoes.html', {
-            'title': 'Documentos Escaneados',
-            'nomes_arquivos': nomes_arquivos,
-            'printer': printer,
-            'itemselec': 'DIGITALIZAÇÕES',
-        })
-
-def ocr(request, printer, arquivo):
-    msg = ''
-    # Tenta conexão com bd
-    try:
-        model = (config.objects.get(id=1))  # pegando configurações
-    except:
-        model = ''
-        msg = sys.exc_info()
-    try:
-        # passa o local do arquivo que será convertido pegando a raiz do banco de dados e concatenando com a impressora e nome do arquivo
-        arquivo_original = os.path.join(model.pasta_dig + '/' + printer, arquivo)
-        arquivo_destino = os.path.join(model.pasta_dig + '/temp/' + arquivo)
-        pasta_temp = os.path.join(model.pasta_dig + '/temp/')
-
-        print("copiando arquivo para pasta temporária")
-        shutil.copy2(arquivo_original, pasta_temp)
-
-        # Iniciando classe OCR
-        ocr = OCR.PyPDFOCR()
-
-        # adiciona um sufixo ao nome do arquivo
-        out_filename = arquivo_destino.replace(".pdf", "_ocr.pdf")
-        # caso já exista um arquivo com o nome do que será jerado, ele é excluido antes da conversão
-        if os.path.exists(out_filename):
-            os.remove(out_filename)  # removendo arquivo
-
-        print("Current directory: %s" % os.getcwd())
-
-        opts = [str(arquivo_destino), '-l por']# .encode('utf-8')] <- #Python 3 não permite
-        # convertendo
-        ocr.go(opts)
-        msg = "Arquivo '" + arquivo.replace(".pdf", "_ocr.pdf") + "' gerado com sucesso!"
-
-    except:
-        msg = 'Erro ao converter arquivo/n' + str(sys.exc_info())
-        raise
+            msg = 'Erro ao converter arquivo/n' + str(sys.exc_info())
+            raise
 
     return render(request, 'digitalizacoes/digitalizacoes.html', {
         'title': 'Documentos Escaneados',
         'redirect': msg,
-        'printer': printer,
+        'printer': u_printer,
         'comprimir': 'comprimir',
-        'arquivo': arquivo.replace(".pdf", "_ocr.pdf"),
+        'arquivo': u_filename.replace(".pdf", "_ocr.pdf"),
     })
 
 
-def compress(request, printer, arquivo):
-    # Tenta conexão com bd
+def compress(request, u_printer, u_filename):
     try:
-        model = (config.objects.get(id=1))  # pegando configurações
-        pasta_original = os.path.join(model.pasta_dig + '/' + printer)
-        pasta_temp = os.path.join(model.pasta_dig + '/temp/')
-        output = pasta_temp + "compacto-"+arquivo
-        path_arquivo = pasta_temp + arquivo
+        raiz = (config.objects.get(id=1)).pasta_dig
+        pasta_original = os.path.join(raiz + '/' + u_printer)
+        pasta_temp = os.path.join(raiz + '/temp/')
+        output = pasta_temp + "compacto-"+u_filename
+        path_arquivo = pasta_temp + u_filename
         msg = ''
 
         msg = os.system("gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/ebook -dNOPAUSE -dQUIET -dBATCH -sOutputFile=%s %s" % (output, path_arquivo))
@@ -242,11 +151,11 @@ def compress(request, printer, arquivo):
         if msg:
             messages.error(request, "Erro ao compactar o arquivo")
         else:
-            print("copiando arquivo criado para a pasta original")
+            # copiando arquivo criado para a pasta original
             shutil.copy2(output, pasta_original)
-            messages.success(request, 'Arquivo "compacto-' + arquivo + '" Gerado com sucesso')
+            messages.success(request, 'Arquivo "compacto-' + u_filename + '" Gerado com sucesso')
     except:
         model = ''
         messages.error(request, sys.exc_info())
 
-    return redirect('/jasmine/escaneados/'+ printer+ '/*file*/*action*/')
+    return redirect(r('DocumentosDigitalizados', u_printer=u_printer, u_filename='*file*', u_action='*action*'))

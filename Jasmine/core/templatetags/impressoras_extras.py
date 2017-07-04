@@ -32,15 +32,17 @@ def split1000(s, sep='.'):
 def data_arquivo(arquivo, printer):
     # Pega a pasta raiz do banco de dados
     raiz = (config.objects.get(id=1)).pasta_dig
-    os.chdir(raiz+ '/'+ printer+ '/')
-    return datetime.datetime.fromtimestamp(os.path.getmtime(arquivo))
+    endereco = os.path.join(raiz, printer)
+    endereco = os.path.join(endereco, arquivo)
+    return datetime.datetime.fromtimestamp(os.path.getmtime(endereco))
 
 @register.filter
 def tam_arquivo(arquivo, printer):
     # Pega a pasta raiz do banco de dados
     raiz = (config.objects.get(id=1)).pasta_dig
-    os.chdir(raiz+ '/'+ printer+ '/')
-    num = os.path.getsize(arquivo)
+    endereco = os.path.join(raiz, printer)
+    endereco = os.path.join(endereco, arquivo)
+    num = os.path.getsize(endereco)
     for x in ['bytes','KB','MB','GB']:
         if num < 1024.0:
             return "%3.1f%s" % (num, x)

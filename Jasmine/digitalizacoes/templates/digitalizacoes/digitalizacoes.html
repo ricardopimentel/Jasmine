@@ -84,29 +84,29 @@
 						<a href="/jasmine/escaneados/{{printer}}/*file*/*action*/">{{printer}}</a>
 					{% endif %}
 				</div>
-				{% if nomes_folders %}
+				{% if list_folders %}
 					<div class="box-file">
-						{% autopaginate nomes_folders 12 %}
-							{% for nome_folder in nomes_folders %}
-								{% if not nome_folder == "temp\\" and not nome_folder == "temp/"%}
+						{% autopaginate list_folders 12 %}
+							{% for folder in list_folders %}
+								{% if not folder == "temp\\" and not folder == "temp/"%}
 									<div class="box_folder">
-										<a href="/jasmine/escaneados/{{nome_folder}}/*file*/*action*/" title="Abrir {{nome_folder}}">
+										<a href="/jasmine/escaneados/{{folder}}/*file*/*action*/" title="Abrir {{folder}}">
 											<div class="folder">
 												<br><img src="{% static 'images/folder2.png' %}" alt="" />
 											</div>
 										</a>
-										<p>{{nome_folder}}</p>
+										<p>{{folder}}</p>
 									</div>
 								{% endif %}
 							{%endfor%}
 						{% paginate %}
 					</div>
-				{% elif nomes_arquivos %}
+				{% elif list_files %}
 					<div class="box-file">
-						{% autopaginate nomes_arquivos 10 %}
-							{% for nome_arquivo in nomes_arquivos %}
-								{% if nome_arquivo|extensao_arquivo == 'nada' %}
-									<a title="{{nome_arquivo}}">
+						{% autopaginate list_files 10 %}
+							{% for file in list_files %}
+								{% if file|extensao_arquivo == 'nada' %}
+									<a title="{{file}}">
 										<div class="arquivo_load">
 											<div class="arquivo_cab_load">
 												<p>Carregando arquivo</p>
@@ -117,41 +117,41 @@
 										</div>
 									</a>
 								{% else %}
-									<a href="/jasmine/escaneados/{{printer}}/{{nome_arquivo}}/ope/" title="Abrir {{nome_arquivo}}">
+									<a href="/jasmine/escaneados/{{printer}}/{{file}}/ope/" title="Abrir {{file}}">
 										<div class="arquivo">
-											{% if nome_arquivo|extensao_arquivo == 'pdf' %}
+											{% if file|extensao_arquivo == 'pdf' %}
 												<div class="arquivo_bar_top">
 													<img src="{% static 'images/pdf_10.png' %}" alt="" />
 												</div>
-											{% elif nome_arquivo|extensao_arquivo == 'jpg' %}
+											{% elif file|extensao_arquivo == 'jpg' %}
 												<div class="arquivo_bar_top">
 													<img src="{% static 'images/image_10.png' %}" alt="" />
 												</div>
 											{% endif %}
-											<p><b>{{nome_arquivo}}</b></p>
-											<p>{{nome_arquivo|data_arquivo:printer|convert_datetime}}</p>
-											<p>{{nome_arquivo|tam_arquivo:printer}}</p>
+											<p><b>{{file}}</b></p>
+											<p>{{file|data_arquivo:printer|convert_datetime}}</p>
+											<p>{{file|tam_arquivo:printer}}</p>
 											<div class="opcoes">
 												<div class="tooltip">
-													<a onclick="confirmaExclusao('{{printer}}', '{{nome_arquivo}}')"><img src="{% static 'images/delete24.png' %}" alt="" /></a>
+													<a onclick="confirmaExclusao('{{printer}}', '{{file}}')"><img src="{% static 'images/delete24.png' %}" alt="" /></a>
 													<script>
-														function confirmaExclusao(printer, nome_arquivo) {
-														   if (confirm("Tem certeza que deseja excluir "+ nome_arquivo+ "?")) {
-														      location.href="/jasmine/escaneados/"+printer+"/"+nome_arquivo+"/del/"
+														function confirmaExclusao(printer, file) {
+														   if (confirm("Tem certeza que deseja excluir "+ file+ "?")) {
+														      location.href="/jasmine/escaneados/"+printer+"/"+file+"/del/"
 														   }
 														}
 													</script>
 													<span class="tooltiptext">Apagar arquivo</span>
 												</div>
 												<div class="tooltip">
-													<a href="/jasmine/escaneados/{{printer}}/{{nome_arquivo}}/dow/"><img src="{% static 'images/down24-1.png' %}" alt=""/></a>
+													<a href="/jasmine/escaneados/{{printer}}/{{file}}/dow/"><img src="{% static 'images/down24-1.png' %}" alt=""/></a>
 													<span class="tooltiptext">Baixar arquivo</span>
 												</div>
-												{% if nome_arquivo|extensao_arquivo == 'pdf' %}
+												{% if file|extensao_arquivo == 'pdf' %}
 													<div class="dropdown">
 														<span><img src="{% static 'images/more24.png' %}" alt="" /></span>
 													    <div class="dropdown-content">
-															<div class="dropdown-content-item"><img src="{% static 'images/makepdf24.png' %}"><a onclick="mostrar('modal_fullscreen')" href="/jasmine/convert/{{printer}}/{{nome_arquivo}}">Tornar Pesquisável</a></div>
+															<div class="dropdown-content-item"><img src="{% static 'images/makepdf24.png' %}"><a onclick="mostrar('modal_fullscreen')" href="/jasmine/convert/{{printer}}/{{file}}">Tornar Pesquisável</a></div>
 														</div>
 													</div>
 												{% endif %}
