@@ -11,7 +11,7 @@ def home(request):
     top_hosts = cursor.fetchall()
     
     # Preparando cores dos gráficos
-    cores_primarias = ['#F746A', '#46BFBD', '#FDB45C', '#512DA8', '#C2185B']
+    cores_primarias = ['#FF3035', '#46BFBD', '#FDB45C', '#512DA8', '#C2185B']
     cores_secundarias = ['#FF5A5E', '#5AD3D1', '#FFC870', '#673AB7', '#E91E63']
     
     return render(request, 'index.html', {

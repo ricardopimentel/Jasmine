@@ -24,10 +24,11 @@ class AdForm(forms.ModelForm):
     # Cria dois campos que não estão no banco de dados, são eles: usuário e senha. Os dados desses campos são providos pelo Active Directory
     usuario = forms.CharField(label="", max_length=20, widget=forms.TextInput(attrs={'placeholder': 'Usuário'}))
     senha = forms.CharField(label="", widget=forms.PasswordInput(attrs={'placeholder': 'Senha'}))
+    filter = forms.CharField(widget=forms.Textarea)
 
     class Meta:  # Define os campos vindos do Model
         model = config
-        fields = ('dominio', 'endservidor', 'gadmin', 'ou', 'filter',)
+        fields = ('dominio', 'endservidor', 'gadmin', 'ou')
 
     def __init__(self, request, *args,
                  **kwargs):  # INIT define caracteristicas para os campos de formulário vindos do Model (banco de dados)

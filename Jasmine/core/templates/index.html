@@ -101,16 +101,16 @@
 				</tbody>
 			</table>
 		</div>
-	
+
 		<div class="card">
 			<img src="{% static 'images/printer.png' %}" alt="" />
 			<h1>Top 5 Impressoras</h1>
-			
+
 			<div>
 				<canvas id="GraficoDonut1" style="width:100%;"></canvas>
 	            <script type="text/javascript">
 	                var options1 = {
-	                    responsive:true                    
+	                    responsive:true
 	                };
 	                var data1 = [
 						{%for item in top_printers%}
@@ -165,7 +165,7 @@
 	                window.onload = function(){
 	                	var ctx = document.getElementById("GraficoDonut").getContext("2d");
 	                    var PizzaChart = new Chart(ctx).Doughnut(data, options);
-	
+
 	                    var ctx1 = document.getElementById("GraficoDonut1").getContext("2d");
 	                    var PizzaChart1 = new Chart(ctx1).Doughnut(data1, options1);
 	

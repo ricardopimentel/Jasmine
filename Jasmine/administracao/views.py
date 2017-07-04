@@ -16,7 +16,7 @@ def pasta_digi(request):
     except:
         model = ''
         messages.error(request, sys.exc_info())
-    # Vefirica se veio aolgo pelo POST
+    # Vefirica se veio algo pelo POST
     if request.method == 'POST':
         # cria uma instancia do formulário e passa a ele os dados do post:
         form = DigiForm(request.POST)
@@ -83,7 +83,7 @@ def dados_ad(request):
     else:
         form = AdForm(request,
                       initial={'dominio': model.dominio, 'endservidor': model.endservidor, 'gadmin': model.gadmin,
-                               'ou': model.ou})
+                               'ou': model.ou, 'filter': model.filter})
         return render(request, 'admin_config_ad.html', {
             'form': form,
             'itemselec': 'ADMINISTRAÇÃO',
