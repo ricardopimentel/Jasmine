@@ -13,7 +13,6 @@ urlpatterns = [
     url(r'^tinymce/', include('tinymce.urls')),
     url(r'^jasmine/$', core.home),
     url(r'^jasmine/relatorio/(?P<user_u>.+)/(?P<printer_u>.+)/(?P<host_u>.+)/$', relatorios.relatorios),
-    url(r'^jasmine/viewlogs/(?P<user_u>.+)/(?P<action_u>.+)/(?P<host_u>.+)/$', administracao.viewlogs),
     url(r'^jasmine/print/$', relatorios.imprimir),
     url(r'^jasmine/ajuda/(?P<topc>.+)$', administracao.ajuda),
     url(r'^jasmine/login/$', login.login),

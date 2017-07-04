@@ -190,4 +190,35 @@
 			</table>			
 		</div>
 	{%endif%}
+
+    <script>
+        function mostrarocultar(mostrar, ocultar){
+            $("#"+mostrar).show(500);
+            document.getElementById(ocultar).style.display = "none";
+        }
+        function ocultarmostrar(mostrar, ocultar){
+            $("#"+ocultar).hide(500);
+            $("#"+mostrar).show(500);
+        }
+        function  mostrar(ID){
+            document.getElementById(ID).style.display = "block";
+
+        }
+        function  ocultar(ID){
+            document.getElementById(ID).style.display = "none";
+            $("#"+ID).hide("slow");
+        }
+    </script>
+
+    {% if messages %}
+        <div class="msg-popup-container">
+            {% for message in messages %}
+                <div id="{{ forloop.counter0 }}" class="msg-popup {{ message.tags }}">
+                    <img src="{% static 'images/'%}{{ message.tags }}.png" alt="" width="70" height="70"/>
+                    <p>{{ message }}</p>
+                    <a onclick="ocultar('{{ forloop.counter0 }}')">x</a>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
 {%endblock%}
