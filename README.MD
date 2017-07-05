@@ -34,7 +34,7 @@ sudo apt-get install libmysqlclient-dev
 sudo apt-get install ghostscript
 sudo apt-get install tesseract-ocr
 sudo cp contrib/por.traineddata /usr/share/tesseract-ocr/tessdata/por.traineddata
-wget http://download.gna.org/wkhtmltopdf/0.12/0.12.4/wkhtmltox-0.12.4_linux-generic-amd64.tar.xz tar xvJf wkhtmltox-0.12.4_linux-generic-amd64.tar.xz
+wget https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.4/wkhtmltox-0.12.4_linux-generic-amd64.tar.xz tar xvJf wkhtmltox-0.12.4_linux-generic-amd64.tar.xz
 sudo cp wkhtmltox/bin/wkhtmlto* /usr/bin/
 pip install -r requirements.txt
 ```
