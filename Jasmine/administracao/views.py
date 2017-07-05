@@ -279,26 +279,19 @@ def view_tutorial(request, Action, Id):
 def ajuda(request, topc):
     tutos = tutoriais.objects.all()
     lasttutos = tutoriais.objects.all().order_by('-id')[:3]
-    if topc == '**topc**': # Se for a url padrão, rederiza a página inicial
-        # Finalizando renderização da página
-        return render(request, 'admin_ajuda.html', {
-                             'title': 'Ajuda',
-                             'tutos': tutos,
-                             'itemselec': 'AJUDA',
-                             'last': lasttutos,
-                         })
-    else:
+    post = []
+    if not topc == '**topc**': # Se for a url padrão, rederiza a página inicial
         # Pega o post pelo id
         try:
             post = tutoriais.objects.get(id=topc)
         except:
             post = ''
             messages.error(request, 'O tutorial informado não existe, você pode criar um novo tutorial')
-        # Finalizando renderização da página
-        return render(request, 'admin_ajuda.html', {
-                             'title': 'Ajuda',
-                             'tutos': tutos,
-                             'itemselec': 'AJUDA',
-                             'last': lasttutos,
-                             'post': post,
-                         })
+    # Finalizando renderização da página
+    return render(request, 'admin_ajuda.html', {
+             'title': 'Ajuda',
+             'tutos': tutos,
+             'itemselec': 'AJUDA',
+             'last': lasttutos,
+             'post': post,
+         })

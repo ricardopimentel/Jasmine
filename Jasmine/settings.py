@@ -148,4 +148,4 @@ DATE_INPUT_FORMATS = (
 
 STATIC_URL = '/jasmine/static/'
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'core/static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')

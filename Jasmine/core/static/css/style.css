@@ -1842,3 +1842,62 @@ a.icon:hover:before {
     width: 100%;
   }
 }
+
+.error-page-container-404{
+	display: flex;
+	flex-direction: row;
+	box-shadow: 1px 1px 7px 0px rgba(193, 192, 192, 0.99);
+	border-radius: 5px;
+	background: white;
+	padding: 20px;
+	border-top: 50px solid #15a2b5;
+	border-bottom: 5px solid #15a2b5;
+}
+
+.error-page-container-500{
+	display: flex;
+	flex-direction: row;
+	box-shadow: 1px 1px 7px 0px rgba(193, 192, 192, 0.99);
+	border-radius: 5px;
+	background: white;
+	padding: 20px;
+	border-top: 50px solid #14afb2;
+	border-bottom: 5px solid #14afb2;
+}
+
+.error-page-img{
+	display: inline-block;
+}
+
+.error-page-img img{
+	margin-top: -50px;
+	border: 5px solid #FFFFFF;
+	border-radius: 100%;
+	box-shadow: 1px 1px 7px 0px rgba(193, 192, 192, 0.99);
+}
+
+.error-page-text{
+	display: inline-block;
+	padding: 10px;
+}
+
+.error-page-text-header{
+	background: #15a2b5;
+	height: 100px;
+	margin-top: -31px;
+	margin-left: -15px;
+}
+
+.error-page-text h1{
+	text-align: center;
+	font-family: 'Cabin Sketch', cursive;
+	font-size: 40px;
+}
+
+.error-page-text h2{
+	font-family: 'Cabin Sketch', cursive;
+}
+
+.error-page-text h3{
+	font-family: 'Cabin Sketch', cursive;
+}

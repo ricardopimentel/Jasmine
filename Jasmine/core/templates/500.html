@@ -1,0 +1,79 @@
+<meta charset="UTF-8"/>
+{% extends "base.html" %}
+{% load impressoras_extras %}
+{% load staticfiles %}
+{%block titulo%}{{title}}{%endblock%}
+
+{%block top%}
+		{% if request.session.nome%}
+			<h1>{{request.session.nome}}</h1>
+			<a href="/jasmine/logout/"><h2>Sair</h2></a>
+		{%endif%}
+{%endblock%}
+
+{%block menu%}
+	{% if not request.session.userl %}
+		<meta http-equiv="refresh" content="0; url=/jasmine/login/">
+	{%else%}
+		{% if request.session.menu%}
+			{%for item in request.session.menu%}
+				{% if item == itemselec %}
+					<li> 
+						<a href="/{{ request.session.url|get_at_index:forloop.counter0 }}">
+							<div class="item-menu-selec">
+								<img src="{% static 'images/'%}{{request.session.img|get_at_index:forloop.counter0}}"  alt="" />
+								<p>{{item}}</p>
+							</div>
+						</a>
+					</li>
+				{% elif item == 'ADMINISTRAÇÃO' %}
+					<li>
+						<div class="dropdown-menu">
+							<a href="/{{ request.session.url|get_at_index:forloop.counter0 }}">
+								<div class="item-menu">
+									<img src="{% static 'images/'%}{{request.session.img|get_at_index:forloop.counter0}}"  alt="" />
+									<p>{{item}}</p>							
+								</div>
+							</a>
+							<div class="dropdown-content-menu">
+								<div class="dropdown-content-item-menu"><img src="{% static 'images/admin24.png' %}"><a onclick="mostrar('modal_fullscreen')" href="/jasmine/admin/digi">Conf. de Digitalizações</a></div>
+								<div class="dropdown-content-item-menu"><img src="{% static 'images/admin24.png' %}"><a onclick="mostrar('modal_fullscreen')" href="/jasmine/admin/ad">Conf. do Active Directory</a></div>
+								<div class="dropdown-content-item-menu"><img src="{% static 'images/admin24.png' %}"><a onclick="mostrar('modal_fullscreen')" href="/jasmine/admin/tutoriais/add">Criar Tutorial</a></div>
+								<div class="dropdown-content-item-menu"><img src="{% static 'images/admin24.png' %}"><a onclick="mostrar('modal_fullscreen')" href="/jasmine/viewlogs/*user*/*action*/*host*/">Visualizador de Logs</a></div>
+							</div>
+						</div>
+					</li>
+				{%else%}
+					<li> 
+						<a href="/{{ request.session.url|get_at_index:forloop.counter0 }}">
+							<div class="item-menu">
+								<img src="{% static 'images/'%}{{request.session.img|get_at_index:forloop.counter0}}"  alt="" />
+								<p>{{item}}</p>
+							</div>
+						</a>
+					</li>
+				{%endif%}
+			{%endfor%}
+		{%endif%}
+	{%endif%}
+{%endblock%}
+	
+{%block conteudo%}
+	{% if not request.session.userl %}
+		<meta http-equiv="refresh" content="0; url=/jasmine/login/">
+	{% else %}
+		<div class="error-page-container-500">
+			<div class="error-page-img">
+                <img src="{% static 'images/500.png' %}" alt="" />
+            </div>
+			<div class="error-page-text">
+                <h1>Erro 500</h1>
+                <h2>Erro inesperado!</h2>
+                <h3>Estamos verificando a causa do problema, tente novamente, caso persista contate a CGTI</h3>
+                <p><b>E-mail: </b>cpd.paraiso@ifto.edu.br</p>
+                <p><b>Telefone: </b>63 3361-0314</p>
+                <p><b>Suporte: </b><a href="https://paraiso.ifto.edu.br/suporte/">paraiso.ifto.edu.br/suporte</a></p>
+            </div>
+        </div>
+    {% endif %}
+{%endblock%}
