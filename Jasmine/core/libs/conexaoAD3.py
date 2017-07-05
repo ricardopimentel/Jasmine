@@ -47,7 +47,6 @@ class conexaoAD(object):
             #print(c.response_to_json())
             #print(c.result)
             res = (c.response)
-            print(res)
             if 'searchResEntry' in str(res):
                 return res[0]['attributes']
             else:
