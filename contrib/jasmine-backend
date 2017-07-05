@@ -25,8 +25,8 @@
 # MySQL server related stuff: You have to create the corresponding
 # account, database and table on your MySQL server
 my $DBhost="localhost";
-my $DBlogin="root";
-my $DBpassword="bd00IF";
+my $DBlogin="USER"; # <== ALTERE AQUI
+my $DBpassword="PASSWORD"; # <== ALTERE AQUI
 my $DBdatabase="jasmine";
 
 # If you want to use Syslog, set this to 1. To disable, set to 0.
