@@ -48,7 +48,7 @@ class conexaoAD(object):
             #print(c.result)
             res = (c.response)
             print(res)
-            if res:
+            if 'searchResEntry' in str(res):
                 return res[0]['attributes']
             else:
                 return 'o'  # Usuario fora do escopo permitido
