@@ -47,7 +47,7 @@ def digitalizacoes(request, u_printer, u_filename, u_action):
             elif u_action == 'del':
                 remover_arquivo(request, u_filename, u_printer, raiz, list_files)
                 return redirect(
-                    r('DocumentosDigitalizados', u_printer=u_printer, u_filename='*file*', u_action='*action*'))
+                    r('digitalizacoes', u_printer=u_printer, u_filename='*file*', u_action='*action*'))
     else:
         err = 'Caminho das digitalizações não está cadastrado'
 
@@ -161,4 +161,4 @@ def compress(request, u_printer, u_filename):
         model = ''
         messages.error(request, sys.exc_info())
 
-    return redirect(r('DocumentosDigitalizados', u_printer=u_printer, u_filename='*file*', u_action='*action*'))
+    return redirect(r('digitalizacoes', u_printer=u_printer, u_filename='*file*', u_action='*action*'))

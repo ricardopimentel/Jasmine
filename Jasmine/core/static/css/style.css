@@ -1784,7 +1784,6 @@ a.icon:hover:before {
 	position: fixed;
     top: 150px;
     right: 5px;
-	overflow: auto;
 }
 
 .msg-popup{
