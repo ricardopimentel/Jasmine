@@ -77,10 +77,10 @@
 	                var data = [                            
 						{%for item in top_users%}
 		                    {             
-		                    	value: {{item.1|split1000}},
+		                    	value: {{item.soma|split1000}},
 		                        color:"{{cores_primarias|get_at_index:forloop.counter0}}",
 		                        highlight: "{{cores_secundarias|get_at_index:forloop.counter0}}",
-		                        label: "{{item.0}}"
+		                        label: "{{item.user}}"
 		                    },
 	                    {%endfor%}
 	                ]
@@ -94,8 +94,8 @@
 					</tr>
 					{%for item in top_users%}
 						<tr>
-							<td><a href="/jasmine/relatorio/{{item.0}}/ / /">{{item.0}}</a></td>
-							<td>{{item.1|split1000}}</td>
+							<td><a href="/jasmine/relatorio/{{item.user}}/ / /">{{item.user}}</a></td>
+							<td>{{item.soma|split1000}}</td>
 						</tr>
 					{%endfor%}
 				</tbody>
@@ -115,10 +115,10 @@
 	                var data1 = [
 						{%for item in top_printers%}
 							{
-		                    	value: {{item.1|split1000}},
+		                    	value: {{item.soma|split1000}},
 		                        color:"{{cores_primarias|get_at_index:forloop.counter0}}",
 		                        highlight: "{{cores_secundarias|get_at_index:forloop.counter0}}",
-		                        label: "{{item.0}}"
+		                        label: "{{item.printer}}"
 		                    },
 						{%endfor%}
 	                 ]
@@ -132,8 +132,8 @@
 					</tr>
 					{%for item in top_printers%}
 						<tr>
-							<td><a href="/jasmine/relatorio/ /{{item.0}}/ /">{{item.0}}</a></td>
-							<td>{{item.1|split1000}}</td>
+							<td><a href="/jasmine/relatorio/ /{{item.printer}}/ /">{{item.printer}}</a></td>
+							<td>{{item.soma|split1000}}</td>
 						</tr>
 					{%endfor%}
 				</tbody>
@@ -155,10 +155,10 @@
 	                var data2 = [
 						{%for item in top_hosts%}
 		                    {             
-		                    	value: {{item.1|split1000}},
+		                    	value: {{item.soma|split1000}},
 		                        color:"{{cores_primarias|get_at_index:forloop.counter0}}",
 		                        highlight: "{{cores_secundarias|get_at_index:forloop.counter0}}",
-		                        label: "{{item.0}}"
+		                        label: "{{item.host}}"
 		                    },
 	                    {%endfor%}
 	                ]
@@ -182,8 +182,8 @@
 					</tr>
 					{%for item in top_hosts%}
 						<tr>
-							<td><a href="/jasmine/relatorio/ / /{{item.0}}/">{{item.0}}</a></td>
-							<td>{{item.1|split1000}}</td>
+							<td><a href="/jasmine/relatorio/ / /{{item.host}}/">{{item.host}}</a></td>
+							<td>{{item.soma|split1000}}</td>
 						</tr>
 					{%endfor%}
 				</tbody>
