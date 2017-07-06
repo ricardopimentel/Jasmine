@@ -2,9 +2,8 @@ import sys
 
 import datetime
 from django.contrib import messages
-from django.db import connection
+from django.http.response import HttpResponseNotFound, HttpResponse
 from django.shortcuts import render, redirect
-from django.views.decorators.csrf import csrf_exempt
 
 from Jasmine.administracao.forms import DigiForm, AdForm, CriarTutoForm
 from Jasmine.core.models import config, logs, tutoriais
@@ -295,3 +294,7 @@ def ajuda(request, topc):
              'last': lasttutos,
              'post': post,
          })
+
+
+def logs_view(request):
+    return render(request, '404.html')

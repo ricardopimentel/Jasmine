@@ -7,13 +7,13 @@
 {%block top%}
 		{% if request.session.nome%}
 			<h1>{{request.session.nome}}</h1>
-			<a href="/jasmine/logout/"><h2>Sair</h2></a>
+			<a href="{% url 'logout' %}"><h2>Sair</h2></a>
 		{%endif%}
 {%endblock%}
 
 {%block menu%}
 	{% if not request.session.userl %}
-		<meta http-equiv="refresh" content="0; url=/jasmine/login/">
+		<meta http-equiv="refresh" content="0; url={% url 'login' %}">
 	{%else%}
 		{% if request.session.menu%}
 			{%for item in request.session.menu%}
@@ -36,10 +36,10 @@
 								</div>
 							</a>
 							<div class="dropdown-content-menu">
-								<div class="dropdown-content-item-menu"><img src="{% static 'images/admin24.png' %}"><a onclick="mostrar('modal_fullscreen')" href="/jasmine/admin/digi">Conf. de Digitalizações</a></div>
-								<div class="dropdown-content-item-menu"><img src="{% static 'images/admin24.png' %}"><a onclick="mostrar('modal_fullscreen')" href="/jasmine/admin/ad">Conf. do Active Directory</a></div>
-								<div class="dropdown-content-item-menu"><img src="{% static 'images/admin24.png' %}"><a onclick="mostrar('modal_fullscreen')" href="/jasmine/admin/tutoriais/add">Criar Tutorial</a></div>
-								<div class="dropdown-content-item-menu"><img src="{% static 'images/admin24.png' %}"><a onclick="mostrar('modal_fullscreen')" href="/jasmine/viewlogs/*user*/*action*/*host*/">Visualizador de Logs</a></div>
+								<div class="dropdown-content-item-menu"><img src="{% static 'images/admin24.png' %}"><a onclick="mostrar('modal_fullscreen')" href="{% url 'administracao_digitalizacoes' %}">Conf. de Digitalizações</a></div>
+								<div class="dropdown-content-item-menu"><img src="{% static 'images/admin24.png' %}"><a onclick="mostrar('modal_fullscreen')" href="{% url 'administracao_ad' %}">Conf. do Active Directory</a></div>
+								<div class="dropdown-content-item-menu"><img src="{% static 'images/admin24.png' %}"><a onclick="mostrar('modal_fullscreen')" href="{% url 'administracao_tutoriais_add' %}">Criar Tutorial</a></div>
+								<div class="dropdown-content-item-menu"><img src="{% static 'images/admin24.png' %}"><a onclick="mostrar('modal_fullscreen')" href="{% url 'administracao_logs_view' %}">Visualizador de Logs</a></div>
 							</div>
 						</div>
 					</li>
@@ -60,7 +60,7 @@
 	
 {%block conteudo%}
 	{% if not request.session.userl %}
-		<meta http-equiv="refresh" content="0; url=/jasmine/login/">
+		<meta http-equiv="refresh" content="0; url={% url 'login' %}">
 	{% else %}
 		<div class="card">
 			<img src="{% static 'images/user.png' %}" alt="" />
@@ -94,7 +94,7 @@
 					</tr>
 					{%for item in top_users%}
 						<tr>
-							<td><a href="/jasmine/relatorio/{{item.user}}/ / /">{{item.user}}</a></td>
+                            <td><a href="{% url 'relatorios_impressoes' user_u=item.user printer_u=' ' host_u=' ' %}" >{{item.user}}</a></td>
 							<td>{{item.soma|split1000}}</td>
 						</tr>
 					{%endfor%}
@@ -132,7 +132,7 @@
 					</tr>
 					{%for item in top_printers%}
 						<tr>
-							<td><a href="/jasmine/relatorio/ /{{item.printer}}/ /">{{item.printer}}</a></td>
+                            <td><a href="{% url 'relatorios_impressoes' user_u=' ' printer_u=item.printer host_u=' ' %}" >{{item.printer}}</a></td>
 							<td>{{item.soma|split1000}}</td>
 						</tr>
 					{%endfor%}
@@ -182,7 +182,7 @@
 					</tr>
 					{%for item in top_hosts%}
 						<tr>
-							<td><a href="/jasmine/relatorio/ / /{{item.host}}/">{{item.host}}</a></td>
+                            <td><a href="{% url 'relatorios_impressoes' user_u=' ' printer_u=' ' host_u=item.host %}" >{{item.host}}</a></td>
 							<td>{{item.soma|split1000}}</td>
 						</tr>
 					{%endfor%}

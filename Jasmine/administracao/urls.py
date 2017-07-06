@@ -9,4 +9,5 @@ urlpatterns = [
     url(r'^admin/digi/$', views.pasta_digi, name='administracao_digitalizacoes'),
     url(r'^admin/tutoriais/add/$', views.add_tutorial, name='administracao_tutoriais_add'),
     url(r'^admin/tutoriais/(?P<Action>.+)/(?P<Id>.+)$', views.view_tutorial, name='administracao_tutoriais'),
+    url(r'^admin/logs/view/$', views.logs_view, name='administracao_logs_view'),
 ]
