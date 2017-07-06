@@ -7,13 +7,13 @@
 {%block top%}
 	{% if request.session.nome%}
 			<h1>{{request.session.nome}}</h1>
-			<a href="/jasmine/logout/"><h2>Sair</h2></a>
+			<a href="{% url 'logout' %}"><h2>Sair</h2></a>
 		{%endif%}
 {%endblock%}
 
 {%block menu%}
 	{% if not request.session.userl %}
-		<meta http-equiv="refresh" content="0; url=/login/">
+		<meta http-equiv="refresh" content="0; url={% url 'login' %}">
 	{%else%}
 		{% if request.session.menu%}
 			{%for item in request.session.menu%}
@@ -36,10 +36,10 @@
 								</div>
 							</a>
 							<div class="dropdown-content-menu">
-								<div class="dropdown-content-item-menu"><img src="{% static 'images/admin24.png' %}"><a onclick="mostrar('modal_fullscreen')" href="/jasmine/admin/digi">Config. de Digitalizações</a></div>
-								<div class="dropdown-content-item-menu"><img src="{% static 'images/admin24.png' %}"><a onclick="mostrar('modal_fullscreen')" href="/jasmine/admin/ad">Config. do Active Directory</a></div>
-								<div class="dropdown-content-item-menu"><img src="{% static 'images/admin24.png' %}"><a onclick="mostrar('modal_fullscreen')" href="/jasmine/admin/tutoriais/add">Criar Tutorial</a></div>
-								<div class="dropdown-content-item-menu"><img src="{% static 'images/admin24.png' %}"><a onclick="mostrar('modal_fullscreen')" href="/jasmine/viewlogs/*user*/*action*/*host*/">Visualizador de Logs</a></div>
+								<div class="dropdown-content-item-menu"><img src="{% static 'images/admin24.png' %}"><a onclick="mostrar('modal_fullscreen')" href="{% url 'administracao_digitalizacoes' %}">Conf. de Digitalizações</a></div>
+								<div class="dropdown-content-item-menu"><img src="{% static 'images/admin24.png' %}"><a onclick="mostrar('modal_fullscreen')" href="{% url 'administracao_ad' %}">Conf. do Active Directory</a></div>
+								<div class="dropdown-content-item-menu"><img src="{% static 'images/admin24.png' %}"><a onclick="mostrar('modal_fullscreen')" href="{% url 'administracao_tutoriais_add' %}">Criar Tutorial</a></div>
+								<div class="dropdown-content-item-menu"><img src="{% static 'images/admin24.png' %}"><a onclick="mostrar('modal_fullscreen')" href="{% url 'administracao_logs_view' %}">Visualizador de Logs</a></div>
 							</div>
 						</div>
 					</li>
@@ -60,7 +60,7 @@
 
 {%block conteudo%}
 	{% if not request.session.userl %}
-		<meta http-equiv="refresh" content="0; url=/jasmine/login/">
+		<meta http-equiv="refresh" content="0; url={% url 'login' %}">
 	{%else%}
 		<div class="limit">
 			<div class="card_noprinter">
@@ -83,7 +83,7 @@
 						<nav>
 							{% for item in tutos %}
 								<ul>
-									<a href="/jasmine/ajuda/{{item.id}}"><li>{{item.titulo}}</li></a>
+									<a href="{% url 'administracao_ajuda' topc=item.id %}"><li>{{item.titulo}}</li></a>
 								</ul>
 							{%endfor%}
 						</nav>
@@ -98,13 +98,13 @@
 				<h1>{{post.titulo}}</h1>
 				<br>
 				<div class="navegation_bar">
-					<a href="/jasmine/ajuda/**topc**">Ajuda</a>
-					<a href="/jasmine/ajuda/{{post.id}}">{{post.titulo}}</a>
+					<a href="{% url 'administracao_ajuda' topc='**topc**' %}">Ajuda</a>
+					<a href="{% url 'administracao_ajuda' topc=post.id %}">{{post.titulo}}</a>
 				</div>
 				{%if request.session.usertip == 'admin' %}
 					<div class="action_bar_tuto">
-						<a href="/jasmine/admin/tutoriais/view/{{post.id}}" title="Editar Tutorial"><img src="{% static 'images/edit24b.png' %}" onmouseover="this.src='{% static 'images/edit24.png' %}'" onmouseout="this.src='{% static 'images/edit24b.png' %}'"></a>
-						<a href="/jasmine/admin/tutoriais/delete/{{post.id}}" title="Excluir Tutorial"><img src="{% static 'images/delete24b.png' %}" onmouseover="this.src='{% static 'images/delete24.png' %}'" onmouseout="this.src='{% static 'images/delete24b.png' %}'"></a>
+						<a href="{% url 'administracao_tutoriais' Action='view' Id=post.id %}" title="Editar Tutorial"><img src="{% static 'images/edit24b.png' %}" onmouseover="this.src='{% static 'images/edit24.png' %}'" onmouseout="this.src='{% static 'images/edit24b.png' %}'"></a>
+						<a href="{% url 'administracao_tutoriais' Action='delete' Id=post.id %}" title="Excluir Tutorial"><img src="{% static 'images/delete24b.png' %}" onmouseover="this.src='{% static 'images/delete24.png' %}'" onmouseout="this.src='{% static 'images/delete24b.png' %}'"></a>
 					</div>
 				{%endif%}
 				<br>
@@ -118,7 +118,7 @@
 				<h1>Ajuda</h1>
 				<br>
 				<div class="navegation_bar">
-					<a href="/jasmine/ajuda/**topc**">Ajuda</a>
+					<a href="{% url 'administracao_ajuda' topc='**topc**' %}">Ajuda</a>
 				</div>
 				<div class="post">
 					<p style="text-align: center;"><img src="/jasmine/static/images/bannereduc1.png" alt="" width="100%" height="200" /></p>
@@ -139,7 +139,7 @@
 									<p>{{item.titulo}}</p>
 								</div>
 							</div>
-							<a href="/jasmine/ajuda/{{item.id}}"><p>Ler Tutorial</p></a>
+							<a href="{% url 'administracao_ajuda' topc=item.id %}"><p>Ler Tutorial</p></a>
 						</div>
 					{%endfor%}
 				</div>

@@ -54,10 +54,10 @@
 								</div>
 							</a>
 							<div class="dropdown-content-menu">
-								<div class="dropdown-content-item-menu"><img src="{% static 'images/admin24.png' %}"><a onclick="mostrar('modal_fullscreen')" href="/jasmine/admin/digi">Conf. de Digitalizações</a></div>
-								<div class="dropdown-content-item-menu"><img src="{% static 'images/admin24.png' %}"><a onclick="mostrar('modal_fullscreen')" href="/jasmine/admin/ad">Conf. do Active Directory</a></div>
-								<div class="dropdown-content-item-menu"><img src="{% static 'images/admin24.png' %}"><a onclick="mostrar('modal_fullscreen')" href="/jasmine/admin/tutoriais/add">Criar Tutorial</a></div>
-								<div class="dropdown-content-item-menu"><img src="{% static 'images/admin24.png' %}"><a onclick="mostrar('modal_fullscreen')" href="/jasmine/viewlogs/*user*/*action*/*host*/">Visualizador de Logs</a></div>
+								<div class="dropdown-content-item-menu"><img src="{% static 'images/admin24.png' %}"><a onclick="mostrar('modal_fullscreen')" href="{% url 'administracao_digitalizacoes' %}">Conf. de Digitalizações</a></div>
+								<div class="dropdown-content-item-menu"><img src="{% static 'images/admin24.png' %}"><a onclick="mostrar('modal_fullscreen')" href="{% url 'administracao_ad' %}">Conf. do Active Directory</a></div>
+								<div class="dropdown-content-item-menu"><img src="{% static 'images/admin24.png' %}"><a onclick="mostrar('modal_fullscreen')" href="{% url 'administracao_tutoriais_add' %}">Criar Tutorial</a></div>
+								<div class="dropdown-content-item-menu"><img src="{% static 'images/admin24.png' %}"><a onclick="mostrar('modal_fullscreen')" href="{% url 'administracao_logs_view' %}">Visualizador de Logs</a></div>
 							</div>
 						</div>
 					</li>
