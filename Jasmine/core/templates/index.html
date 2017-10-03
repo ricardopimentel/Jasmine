@@ -5,10 +5,10 @@
 {%block titulo%}{{title}}{%endblock%}
 
 {%block top%}
-		{% if request.session.nome%}
-			<h1>{{request.session.nome}}</h1>
-			<a href="{% url 'logout' %}"><h2>Sair</h2></a>
-		{%endif%}
+    {% if request.session.nome%}
+        <h1>{{request.session.nome}}</h1>
+        <a href="{% url 'logout' %}"><h2>Sair</h2></a>
+    {%endif%}
 {%endblock%}
 
 {%block menu%}

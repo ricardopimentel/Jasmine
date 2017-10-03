@@ -1,5 +1,4 @@
 #!/usr/bin/perl -w
-
 # JASmine, print accounting system for Cups.
 # Copyright (C) Nayco.
 #
@@ -26,8 +25,8 @@
 # MySQL server related stuff: You have to create the corresponding
 # account, database and table on your MySQL server
 my $DBhost="localhost";
-my $DBlogin="USUARIO";
-my $DBpassword="SENHA";
+my $DBlogin="USER"; # <== ALTERE AQUI
+my $DBpassword="PASSWORD"; # <== ALTERE AQUI
 my $DBdatabase="jasmine";
 
 # If you want to use Syslog, set this to 1. To disable, set to 0.
@@ -41,7 +40,7 @@ my $Want_Sys_Syslog=1;
 my $Debug_Mode=0;
 
 # Location of the python and pkpgcounter binaries
-my $path_to_pkpgcounter="/usr/bin/pkpgcounter";
+my $path_to_pkpgcounter="/usr/local/bin/pkpgcounter";
 my $path_to_python="/usr/bin/python";
 
 
@@ -64,7 +63,6 @@ my $me = basename($0);
 
 # Lockfile: Critical to prevent this script to bring down the server !
 ## TODO: Look for a better place to create this lockfile, maybe /var/... ?
-
 #my $lockfile = $backends_dir."/".$me.".lock";
 my $lockfile ="/tmp/".$me.".lock";
 
@@ -171,8 +169,8 @@ sub count_pages {
   # I find better to use it than to reinvent the wheel ;)
 
   # Get the name of the file to analyse
-  my $doc=shift;
-
+  my $doc=shift;  
+  
   # If pdl_analyser.py isn't installed, or the path incorrect,
   # or not executable, warn the admin !
   if ( ! -e $path_to_pkpgcounter){
@@ -369,18 +367,35 @@ else {
   my $tmpfile;
 
   # If we were called with 5 arguments, read from STDIN to a tempfile:
-  if (@ARGV == 5){
+  #if (@ARGV == 5){
     # TODO : This is not portable, use File::Temp instead !
-    my $tmpcmd = "/bin/mktemp </dev/null ".$ENV{"TMPDIR"}."/print.XXXXXX";
-    $tmpfile = qx{$tmpcmd};
-    chomp $tmpfile;
+  #  my $tmpcmd = "/bin/mktemp </dev/null ".$ENV{"TMPDIR"}."/print.XXXXXX";
+  #  $tmpfile = qx{$tmpcmd};
+  #  chomp $tmpfile;
     # TODO : This is not portable too !
-    qx{cat > $tmpfile};
+  #  qx{cat > $tmpfile};
 
     # ...And set $tmpfile to be the document to print
-    $doc = $tmpfile;
-    log_debug ("  Called with 5 args, \$doc is read from STDIN and the tempfile is $doc");
+ #   $doc = $tmpfile;
+ #   log_debug ("  Called with 5 args, \$doc is read from STDIN and the tempfile is $doc");
+ # }
+
+#### remover esse bloco se der problema (samuel)
+# If we were called with 5 arguments, read from STDIN to a tempfile:
+  if (@ARGV == 5){
+    # TODO : Validate this works, and add some comments !
+    use File::Temp;
+    use File::Copy;
+
+    my ($tempfh,$doc)=mkstempt("jasmine_XXXXXXXX", $ENV{"TMPDIR"});
+    
+    copy(\*STDIN, $tempfh);
+    
+    log_debug ("  Called with 5 args, \$doc is read from STDIN and the 
+tempfile is $doc");
   }
+
+#### Remover ate aqui
 
   # If called with 6 arguments, the 6th is the path of the file to print.
   # TODO : Check if that *really* means that the file is raw data and we cannot
@@ -449,10 +464,9 @@ else {
 
     # Here we log this print job in the database...
     my $dsn = "DBI:mysql:database=$DBdatabase;host=$DBhost";
-	my $dbh = DBI->connect($dsn, $DBlogin, $DBpassword, { mysql_enable_utf8 => 1 }) or log_failure ("  Couldn't connect to the MySQL server !");
-    #my $dbh = DBI->connect($dsn, $DBlogin, $DBpassword) or log_failure ("  Couldn't connect to the MySQL server !");
-	
-	#Set the ip of host
+    my $dbh = DBI->connect($dsn, $DBlogin, $DBpassword, { mysql_enable_utf8 => 1 }) or log_failure ("  Couldn't connect to the MySQL server !");
+    
+    #Set the ip of host
     my @options_split = split(/ /,$options);
     my @host_option = grep(/^job-originating-host-name/, @options_split);
     my $host = @host_option[0];
@@ -462,20 +476,17 @@ else {
     #Change the title of network file printed
     $title =~ s/smbprn.?\d{8} Remote Downlevel Document //g;
     $title =~ s/smbprn.?\d{8}//g;
-		
+    
     # Escape the fields to be inserted
-	my @sqlArgs=map($dbh->quote($_), ($job_id, $printer,$user, $hostname, $title, $copies, $pg_count, $options, $doc, $host));
-    #my @sqlArgs=map($dbh->quote($_), ($job_id, $printer,$user, $hostname, $title, $copies, $pg_count, $options, $doc));
+    my @sqlArgs=map($dbh->quote($_), ($job_id, $printer,$user, $hostname, $title, $copies, $pg_count, $options, $doc, $host));
 		
-	my $query="INSERT INTO core_jobs_log (date, job_id, printer, user, server, title, copies,pages, options, doc, host)";
-    #my $query="INSERT INTO jobs_log (date, job_id, printer, user, server, title, copies,pages, options, doc)";
-	
+    my $query="INSERT INTO core_jobs_log (date, job_id, printer, user, server, title, copies,pages, options, doc, host)";
     $query.=" VALUES (now(), ".join (", ", @sqlArgs).")";
     $dbh->do($query) or do{
       # If the query fails, log it, and set the failure flag.
       $count_failure = 1;
 
-      log_failure ("  DB insert query failed");
+      log_failure ("  DB insert query failed ".$dbh->errstr);
       log_debug("  Query : $query");
       log_debug("  MySQL error : ".$dbh->errstr);
       log_debug(@sqlArgs);

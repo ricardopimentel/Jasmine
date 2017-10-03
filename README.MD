@@ -5,29 +5,53 @@ Sistema de visualização de relatórios de impressões.
 ## Pré-requisitos
 - Ter instalado:
     - cups+jasmine ([Parte 1](https://sempreupdate.com.br/2016/10/como-instalar-uma-impressora-em-distribuicoes-baseadas-no-ubuntu-ou-fedora-parte-1.html) e [Parte 2](https://sempreupdate.com.br/2016/11/gerando-relatorios-de-impressao-parte-2.html))
-    - mysql-server + phpmyadmin
 
 ## Como utilizar?
-1 Clone o repositório.
-
+1 Instalando Dokku
 ```console
-git clone https://gitlab.com/smkbarbosa/Jasmine.git Jasmine
+wget https://raw.githubusercontent.com/dokku/dokku/v0.7.2/bootstrap.sh
+sudo DOKKU_TAG=v0.7.2 bash bootstrap.sh
 ```
 
-2 Crie um virtualenv com python 3.5
-
+2 Gerar chave ssh (Aceite as três opções pedidas por default. Não inserir password)
 ```console
-cd Jasmine
-python -m venv .Jasmine
+ssh-keygen -t rsa
 ```
 
-3 Ative o virtualenv
-
+3 Copiar a chave selecionando o conteúdo
 ```console
-source .Jasmine/bin/activate
+cat ~/.ssh/id_rsa.pub
 ```
 
-4 Instale as dependêcias
+4 Acessar o endereço IP do servidor pelo navegador, colar a chave copiada e pressionar Finish Setup
+![Print1](contrib/dokkuprint1.png)
+
+5 Criar o app Jasmine
+```console
+dokku apps:create jasmine
+```
+
+6 Instalar plugin mysql, criar serviço e ligar ao app
+```console
+sudo dokku plugin:install https://github.com/dokku/dokku-mysql.git mysql
+dokku mysql:create jasmine
+dokku mysql:link jasmine jasmine
+```
+
+7 Configurando DEBUG e SECRET_KEY
+```console
+dokku config:set fjfundo DEBUG='False'
+dokku config:set fjfundo SECRET_KEY='sua secret_key'
+```
+
+8 Clone o repositório
+
+```console
+sudo dokku plugin:install https://github.com/crisward/dokku-clone.git clone
+dokku clone jasmine https://gitlab.com/smkbarbosa/Jasmine.git
+```
+
+9 Instale as dependêcias
 
 ```console
 sudo apt-get install libmysqlclient-dev
@@ -35,24 +59,8 @@ sudo apt-get install ghostscript
 sudo apt-get install tesseract-ocr
 sudo cp contrib/por.traineddata /usr/share/tesseract-ocr/tessdata/por.traineddata
 wget https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.4/wkhtmltox-0.12.4_linux-generic-amd64.tar.xz tar xvJf wkhtmltox-0.12.4_linux-generic-amd64.tar.xz
+sudo tar -Jxf wkhtmltox-0.12.4_linux-generic-amd64.tar.xz
 sudo cp wkhtmltox/bin/wkhtmlto* /usr/bin/
-pip install -r requirements.txt
-```
-
-5 Configure a instancia com o .env
-
-```console
-cp contrib/env-sample .env
-nano .env
-```
-
-   - Defina uma SECRET_KEY segura para a instância
-   - Defina DEBUG=False
-
-6 Rodar as migrações
-
-```console
-python manage.py migrate
 ```
 
 7 Substituir o arquivo do backend do jasmine no cups e configurar banco de dados
@@ -67,34 +75,6 @@ sudo nano /usr/lib/cups/backend/jasmine
 
 ```console
 python manage.py test
-```
-
-9 Testar configuração inicial
-
-```console
-python manage.py runmodwsgi
-```
-
-   - Acessar pelo navegador o endereço: http://servidor:8000/jasmine
-   - Se tudo ocorreu bem, será apresentada a página de configuração do sistema.
-   
-10 Executar o Setup
-
-```console
-sudo python manage.py runmodwsgi --setup-only --port=8000 --user user --server-root=/etc/mod_wsgi-express-80
-```
-
-11 Copie o arquivo jasmine-server para /etc/init.d/ e coloque na inicialização do sistema
-
-```console
-sudo cp contrib/jasmine-server /etc/init.d/jasmine
-sudo update-rc.d jasmine defaults
-```
-
-12 Inicie o serviço
-
-```console
-sudo /etc/init.d/jasmine start
 ```
 
 13 Acesse a página de configuração http://servidor:8000/jasmine
