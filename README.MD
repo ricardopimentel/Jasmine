@@ -7,6 +7,7 @@ Sistema de visualização de relatórios de impressões.
     - cups+jasmine ([Parte 1](https://sempreupdate.com.br/2016/10/como-instalar-uma-impressora-em-distribuicoes-baseadas-no-ubuntu-ou-fedora-parte-1.html) e [Parte 2](https://sempreupdate.com.br/2016/11/gerando-relatorios-de-impressao-parte-2.html))
 
 ## Como utilizar?
+
 1 Instalando Dokku
 ```console
 wget https://raw.githubusercontent.com/dokku/dokku/v0.7.2/bootstrap.sh
@@ -18,7 +19,7 @@ sudo DOKKU_TAG=v0.7.2 bash bootstrap.sh
 ssh-keygen -t rsa
 ```
 
-3 Copiar a chave selecionando o conteúdo
+3 Visualizar a chave, selecionar e copiar o conteúdo
 ```console
 cat ~/.ssh/id_rsa.pub
 ```
@@ -38,46 +39,46 @@ dokku mysql:create jasmine
 dokku mysql:link jasmine jasmine
 ```
 
-7 Configurando DEBUG e SECRET_KEY
+7 Configurando DEBUG e SECRET_KEY (Criar Secret Key segura)
 ```console
-dokku config:set fjfundo DEBUG='False'
-dokku config:set fjfundo SECRET_KEY='sua secret_key'
+dokku config:set jasmine DEBUG='False'
+dokku config:set jasmine SECRET_KEY='sua secret_key'
 ```
 
-8 Clone o repositório
-
+8 Clone o repositório, no final será aprsentado o endereço para acessar a aplicação
 ```console
 sudo dokku plugin:install https://github.com/crisward/dokku-clone.git clone
 dokku clone jasmine https://gitlab.com/smkbarbosa/Jasmine.git
 ```
 
 9 Instale as dependêcias
-
 ```console
 sudo apt-get install libmysqlclient-dev
 sudo apt-get install ghostscript
 sudo apt-get install tesseract-ocr
-sudo cp contrib/por.traineddata /usr/share/tesseract-ocr/tessdata/por.traineddata
+wget https://gitlab.com/smkbarbosa/Jasmine/raw/master/contrib/por.traineddata
+sudo cp por.traineddata /usr/share/tesseract-ocr/tessdata/por.traineddata
 wget https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.4/wkhtmltox-0.12.4_linux-generic-amd64.tar.xz tar xvJf wkhtmltox-0.12.4_linux-generic-amd64.tar.xz
 sudo tar -Jxf wkhtmltox-0.12.4_linux-generic-amd64.tar.xz
 sudo cp wkhtmltox/bin/wkhtmlto* /usr/bin/
 ```
 
-7 Substituir o arquivo do backend do jasmine no cups e configurar banco de dados
-
+10 Executar as migrações
 ```console
-sudo cp contrib/jasmine-backend /usr/lib/cups/backend/jasmine
+dokku run jasmine python manage.py migrate
+```
+
+11 Substituir o arquivo do backend do jasmine no cups e configurar banco de dados
+```console
+wget https://gitlab.com/smkbarbosa/Jasmine/raw/master/contrib/jasmine-backend
+sudo cp jasmine-backend /usr/lib/cups/backend/jasmine
 sudo chmod 755 /usr/lib/cups/backend/jasmine
+sudo chown root /usr/lib/cups/backend/jasmine
 sudo nano /usr/lib/cups/backend/jasmine
+sudo /etc/init.d/cups restart
 ```
 
-8 Execute os testes
-
-```console
-python manage.py test
-```
-
-13 Acesse a página de configuração http://servidor:8000/jasmine
+13 Acesse a página de configuração http://servidor:porta/jasmine
 
 - Preencha os dados solicitados e clique em salvar
 
@@ -105,4 +106,7 @@ Exemplo:
 - Acesse o menu Administração
 - Acesse Conf. de Digitalizações
 - Especifique o local da pasta raiz dos arquivos digitalizados.
+    ```console
+    Exemplo: /home/cgti/Digitalizacoes
+    ```
 
