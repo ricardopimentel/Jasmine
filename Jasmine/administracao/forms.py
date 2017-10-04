@@ -74,30 +74,10 @@ class AdForm(forms.ModelForm):
                 # Adiciona erro na validação do formulário
                 raise forms.ValidationError("Erro na Conexão", code='invalid')
             else:  # se logou
-                try:  # Tenta salvar tudo no banco de dados no id 1
-
-                    # pegar endereço IP do cliente
-                    x_forwarded_for = self.request.META.get('HTTP_X_FORWARDED_FOR')
-                    if x_forwarded_for:
-                        Ip = x_forwarded_for.split(',')[-1].strip()
-                    else:
-                        Ip = self.request.META.get('REMOTE_ADDR')
-
+                try:# Tenta salvar tudo no banco de dados no id 1
                     # Pega uma instancia do item conf do banco de dados
                     conf = config.objects.get(id=1)
 
-                    # Cria cabeçalho da váriavel resumo
-                    resumo = 'Administracao/Config AD/ foi alterado por: ' + self.request.session['userl']
-                    # item do resumo (itens alterados pelo usuário)
-                    resumo_item = ''
-
-                    # salva configurações anteriores em variaveis para aplicar ao log
-                    dominio_old = conf.dominio
-                    endservidor_old = conf.endservidor
-                    gadmin_old = conf.gadmin
-                    ou_old = conf.ou
-                    lista_old = (dominio_old, endservidor_old, gadmin_old, ou_old)
-                    # Aplica valores novos (informados pelo usuário) aos campos
                     conf.dominio = Dominio
                     conf.endservidor = Endservidor
                     conf.gadmin = Gadmin
@@ -105,31 +85,12 @@ class AdForm(forms.ModelForm):
                     conf.filter = Filter
                     lista_new = (Dominio, Endservidor, Gadmin, Ou, Filter)
                     conf.save()
-                    # Salva log
-                    # Criar resumo
-                    lista_rotulos = ('Domínio', 'Endereço Servidor', 'Grupo Administradores', 'Base', 'Filtro')
-                    # Procurar outra forma de pegar o indice do for
-                    i = 0  # estou criando um contador
-                    for item in lista_new:
-                        if not item == lista_old[i]:
-                            resumo_item += ' \nO campo ' + lista_rotulos[i] + ' tinha o valor: \n    ' + lista_old[
-                                i] + '\nFoi Alterado para: \n    ' + lista_new[i] + '\n'
-                        i = i + 1  # não aceita o i++ (tenso)
-                    if resumo_item:
-                        resumo += resumo_item
-                        log = logs(
-                            data=datetime.datetime.now(),
-                            action='Alt',
-                            item='Administração/Config AD',
-                            resumo=resumo,
-                            user=self.request.session['userl'],
-                            ip=Ip)
-                        log.save()
+
                 except ObjectDoesNotExist:  # caso não exista nada no bd cria um id 1 com os dados passados
                     conf = config(id=1, dominio=Dominio, endservidor=Endservidor, gadmin=Gadmin, ou=Ou, filter=Filter)
                     conf.save()
-                    # except:
-                    # raise forms.ValidationError(sys.exc_info())
+                except:
+                    raise forms.ValidationError(sys.exc_info())
         # Sempre retorne a coleção completa de dados válidos.
         return cleaned_data
 

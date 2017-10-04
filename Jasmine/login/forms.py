@@ -1,7 +1,7 @@
 from django import forms
 
 from Jasmine.core.libs.conexaoAD3 import conexaoAD
-from Jasmine.core.models import config, tutoriais, logs
+from Jasmine.core.models import config
 
 
 class LoginForm(forms.Form):
