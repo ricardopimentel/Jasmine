@@ -1,10 +1,9 @@
 from django import forms
 import sys
 from django.core.exceptions import ObjectDoesNotExist
-import datetime
 
 from Jasmine.core.libs.conexaoAD3 import conexaoAD
-from Jasmine.core.models import config, logs, tutoriais
+from Jasmine.core.models import config, tutoriais
 
 
 class DigiForm(forms.ModelForm):
@@ -50,6 +49,7 @@ class AdForm(forms.ModelForm):
         self.fields['endservidor'].label = ""
         self.fields['gadmin'].label = ""
         self.fields['ou'].label = ""
+        self.fields['filter'].label = "Filtro"
 
     def clean(self):
         # Inicializa váriaveis com os dados digitados no formulario
@@ -65,8 +65,7 @@ class AdForm(forms.ModelForm):
         if Usuario and Senha:  # Usuário e senha OK
             # Cria Conexão LDAP ou = 'OU=ca-paraiso, OU=reitoria, OU=ifto, DC=ifto, DC=local'
             c = conexaoAD(Usuario, Senha, Ou, Filter)
-            result = c.PrimeiroLogin(Usuario, Senha, Dominio,
-                                     Endservidor, Filter)  # tenta login no ldap e salva resultado em result
+            result = c.PrimeiroLogin(Usuario, Senha, Dominio, Endservidor, Filter)  # tenta login no ldap e salva resultado em result
             if (result == ('i')):  # Credenciais invalidas (usuario e/ou senha)
                 # Adiciona erro na validação do formulário
                 raise forms.ValidationError("Usuário ou senha incorretos", code='invalid')
@@ -83,7 +82,6 @@ class AdForm(forms.ModelForm):
                     conf.gadmin = Gadmin
                     conf.ou = Ou
                     conf.filter = Filter
-                    lista_new = (Dominio, Endservidor, Gadmin, Ou, Filter)
                     conf.save()
 
                 except ObjectDoesNotExist:  # caso não exista nada no bd cria um id 1 com os dados passados
@@ -119,24 +117,6 @@ class CriarTutoForm(forms.ModelForm):
                               data=cleaned_data.get('data'), user=cleaned_data.get('user'))
             model.save()  # Salva no bd
 
-            # pegar endereço IP do cliente
-            x_forwarded_for = self.request.META.get('HTTP_X_FORWARDED_FOR')
-            if x_forwarded_for:
-                Ip = x_forwarded_for.split(',')[-1].strip()
-            else:
-                Ip = self.request.META.get('REMOTE_ADDR')
-            # Cria cabeçalho da váriavel resumo
-            resumo = 'Um novo tutorial foi criado por: ' + self.request.session[
-                'userl'] + '\nTitulo: \n' + cleaned_data.get('titulo') + '\nTexto: ' + cleaned_data.get('texto')
-            # Salvar log
-            log = logs(
-                data=datetime.datetime.now(),
-                action='Inc',
-                item='Administração/Tutorial',
-                resumo=resumo,
-                user=self.request.session['userl'],
-                ip=Ip)
-            log.save()
         except:
             raise forms.ValidationError(sys.exc_info()[1])
         # Sempre retorne a coleção completa de dados válidos.

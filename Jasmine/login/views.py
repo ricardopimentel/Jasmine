@@ -20,7 +20,6 @@ def login(request):
         dominio = None
 
     if dominio:  # Dominio existe no banco de dados
-        # Se vier algo pelo post significa que houve requisição
         if request.method == 'POST':
             # cria uma instancia do formulario com os dados vindos do request POST:
             form = LoginForm(request, data=request.POST)
@@ -37,7 +36,6 @@ def login(request):
             'itemselec': 'HOME',
         })
     else:  # Dominio não existe no banco de dados
-        # Se vier algo pelo post significa que houve requisição
         if request.method == 'POST':
             # cria uma instancia do formulario de preenchimento dos dados do AD com os dados vindos do request POST:
             form = AdForm(request, data=request.POST)
@@ -47,8 +45,6 @@ def login(request):
                 form = LoginForm(request)
                 # Chama a página novamente
                 return render(request, 'login.html', {'form': form, 'err': ''})
-            else:
-                print('formulario não é válido - Fazer algo aqui posteriormente')
         else:  # se não veio nada no post cria uma instancia vazia
             form = AdForm(request)
         return render(request, 'admin_config_ad_inicial.html', {
