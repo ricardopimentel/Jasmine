@@ -24,6 +24,8 @@ def digitalizacoes(request, u_printer, u_filename, u_action):
     err = ''
     raiz = (config.objects.get(id=1)).pasta_dig
 
+    print(os.listdir('/'))
+
     if raiz:
         if os.path.isdir(raiz):
             for root, dirs, files in os.walk(os.path.join(raiz, u_printer)):# faz varredura nos arquivos e diretórios da raiz
