@@ -221,7 +221,7 @@ def imprimir(request):
 
         return response
     except OSError:
-        messages.error(request, 'wkhtmltopdf não está instalado, instale e tente novamente\n'+sys.exc_info())
+        messages.error(request, 'wkhtmltopdf não está instalado, instale e tente novamente')
         return redirect(r('home'))
     except:
         messages.error(request, sys.exc_info())
