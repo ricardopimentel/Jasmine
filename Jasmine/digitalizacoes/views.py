@@ -25,29 +25,32 @@ def digitalizacoes(request, u_printer, u_filename, u_action):
     raiz = (config.objects.get(id=1)).pasta_dig
 
     if raiz:
-        for root, dirs, files in os.walk(os.path.join(raiz, u_printer)):# faz varredura nos arquivos e diretórios da raiz
-            if not u_printer:# URL padrão não vem printer especificada, mostrar lista de pastas
-                dirs.sort(reverse=True)
-                for dirName in dirs:
-                    if not dirName == 'temp':
-                        list_folders.append(dirName)
-                break# Quebra para não executar recursividade
-            else:# Se entrar aqui, está dentro de uma pasta, exibir arquivos
-                files.sort(key=lambda x: os.path.getmtime(os.path.join(root, x)), reverse=True)# Ordenar por data reversa, ultimos na frente
-                for fileName in files:
-                    list_files.append(fileName)
-                break# Quebra para não executar recursividade
+        if os.path.isdir(raiz):
+            for root, dirs, files in os.walk(os.path.join(raiz, u_printer)):# faz varredura nos arquivos e diretórios da raiz
+                if not u_printer:# URL padrão não vem printer especificada, mostrar lista de pastas
+                    dirs.sort(reverse=True)
+                    for dirName in dirs:
+                        if not dirName == 'temp':
+                            list_folders.append(dirName)
+                    break# Quebra para não executar recursividade
+                else:# Se entrar aqui, está dentro de uma pasta, exibir arquivos
+                    files.sort(key=lambda x: os.path.getmtime(os.path.join(root, x)), reverse=True)# Ordenar por data reversa, ultimos na frente
+                    for fileName in files:
+                        list_files.append(fileName)
+                    break# Quebra para não executar recursividade
 
-        # Verificar tipo de ação a ser realizada com o arquivo
-        if u_action:
-            if u_action == 'ope':
-                return abrir_arquivo(request, u_filename, u_printer, raiz)
-            elif u_action == 'dow':
-                return baixar_arquivo(request, u_filename, u_printer, raiz)
-            elif u_action == 'del':
-                remover_arquivo(request, u_filename, u_printer, raiz, list_files)
-                return redirect(
-                    r('digitalizacoes', u_printer=u_printer, u_filename='*file*', u_action='*action*'))
+            # Verificar tipo de ação a ser realizada com o arquivo
+            if u_action:
+                if u_action == 'ope':
+                    return abrir_arquivo(request, u_filename, u_printer, raiz)
+                elif u_action == 'dow':
+                    return baixar_arquivo(request, u_filename, u_printer, raiz)
+                elif u_action == 'del':
+                    remover_arquivo(request, u_filename, u_printer, raiz, list_files)
+                    return redirect(
+                        r('digitalizacoes', u_printer=u_printer, u_filename='*file*', u_action='*action*'))
+        else:
+            err = 'Caminho das digitalizações cadastrado não foi encontrado'
     else:
         err = 'Caminho das digitalizações não está cadastrado'
 
