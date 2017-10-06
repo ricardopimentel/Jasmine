@@ -24,7 +24,7 @@ def digitalizacoes(request, u_printer, u_filename, u_action):
     err = ''
     raiz = (config.objects.get(id=1)).pasta_dig
 
-    mostrar = os.listdir('/home/cgti/Digitalizacoes/')
+    mostrar = os.listdir(raiz)
 
     if raiz:
         if os.path.isdir(raiz):
