@@ -2,7 +2,6 @@ import sys
 
 import datetime
 from django.contrib import messages
-from django.http.response import HttpResponseNotFound, HttpResponse
 from django.shortcuts import render, redirect
 
 from Jasmine.administracao.forms import DigiForm, AdForm, CriarTutoForm

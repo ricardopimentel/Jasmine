@@ -1,5 +1,7 @@
+import sys
+from django.contrib import messages
 from django.db import connection
-from django.shortcuts import render
+from django.shortcuts import render, resolve_url as r, redirect
 from django.template import Context
 from django.template.loader import get_template
 from django.views.decorators.csrf import csrf_exempt
@@ -205,20 +207,22 @@ def imprimir(request):
     else:
         path_wkthmltopdf = '/usr/bin/wkhtmltopdf'
 
-    config = pdfkit.configuration(wkhtmltopdf=path_wkthmltopdf)
-    options = {
-        'encoding': 'utf-8',
-        'footer-left': 'IFTO - Campus de Paraiso do Tocantins [date]',
-        'footer-right': 'Pag. [page] de [topage]',
-    }
+    try:
+        config = pdfkit.configuration(wkhtmltopdf=path_wkthmltopdf)
+        options = {
+            'encoding': 'utf-8',
+            'footer-left': 'IFTO - Campus de Paraiso do Tocantins [date]',
+            'footer-right': 'Pag. [page] de [topage]',
+        }
 
-    # Use False instead of output path to save pdf to a variable
-    pdf = pdfkit.from_string(html, False, configuration=config, options=options)
-    response = HttpResponse(pdf, content_type='application/pdf')
+        # Use False instead of output path to save pdf to a variable
+        pdf = pdfkit.from_string(html, False, configuration=config, options=options)
+        response = HttpResponse(pdf, content_type='application/pdf')
 
-    return response
-    # pdf = pisa.pisaDocument(StringIO.StringIO(html.encode('utf-8')), dest=result)
-    # if not pdf.err:
-    #    return HttpResponse(result.getvalue(), content_type='application/pdf')
-    # else:
-    #    return HttpResponse('Errors')
+        return response
+    except OSError:
+        messages.error(request, 'wkhtmltopdf não está instalado, instale e tente novamente')
+        return redirect(r('home'))
+    except:
+        messages.error(request, sys.exc_info())
+        return redirect(r('home'))
