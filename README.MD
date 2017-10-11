@@ -51,27 +51,14 @@ sudo dokku plugin:install https://github.com/crisward/dokku-clone.git clone
 dokku clone jasmine https://gitlab.com/smkbarbosa/Jasmine.git
 ```
 
-9 Identifique ID do container
-```console
-sudo docker ps
-```
-![Print2](contrib/dokkuprint2.png)
-
-10 Acesse o container e instale as dependêcias
-```console
-sudo docker exec -it <CONTAINER ID> apt-get update
-sudo docker exec -it <CONTAINER ID> apt-get install ghostscript
-sudo docker exec -it <CONTAINER ID> apt-get install tesseract-ocr
-sudo docker exec -it <CONTAINER ID> wget https://gitlab.com/smkbarbosa/Jasmine/raw/master/contrib/por.traineddata
-sudo docker exec -it <CONTAINER ID> cp por.traineddata /usr/share/tesseract-ocr/tessdata/por.traineddata
-sudo docker exec -it <CONTAINER ID> wget https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.4/wkhtmltox-0.12.4_linux-generic-amd64.tar.xz
-sudo docker exec -it <CONTAINER ID> tar -Jxf wkhtmltox-0.12.4_linux-generic-amd64.tar.xz
-sudo docker exec -it <CONTAINER ID> cp /wkhtmltox/bin/wkhtmltopdf /usr/bin/
-```
-
-11 Criar a estrutura de pastas para receber os documentos digitalizados
+11 Criar a estrutura de pastas para receber os componentes externos
 ```console
 sudo mkdir -p  "/var/lib/dokku/data/storage/jasmine"
+sudo mkdir -p  "/var/lib/dokku/data/storage/jasmine/wkhtmltopdf"
+```
+
+Estrutora para documentos digitalizados
+```console
 sudo mkdir -p  "/var/lib/dokku/data/storage/jasmine/Digitalizacoes"
 sudo mkdir -p  "/var/lib/dokku/data/storage/jasmine/Digitalizacoes/Impressora 1/"
 sudo mkdir -p  "/var/lib/dokku/data/storage/jasmine/Digitalizacoes/Impressora 2/"
@@ -94,6 +81,27 @@ Exemplo:
                                 temp/
 ```
 A pasta temp é obrigatória
+
+10 Acesse o container e instale as dependêcias
+```console
+wget https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.4/wkhtmltox-0.12.4_linux-generic-amd64.tar.xz
+sudo tar -Jxf wkhtmltox-0.12.4_linux-generic-amd64.tar.xz
+sudo cp wkhtmltox/bin/wkhtmltopdf "/var/lib/dokku/data/storage/jasmine/wkhtmltopdf"
+
+
+
+
+
+
+
+
+sudo docker exec -it <CONTAINER ID> apt-get update
+sudo docker exec -it <CONTAINER ID> apt-get install ghostscript
+sudo docker exec -it <CONTAINER ID> apt-get install tesseract-ocr
+sudo docker exec -it <CONTAINER ID> wget https://gitlab.com/smkbarbosa/Jasmine/raw/master/contrib/por.traineddata
+sudo docker exec -it <CONTAINER ID> cp por.traineddata /usr/share/tesseract-ocr/tessdata/por.traineddata
+
+```
 
 12 Compartilhar pastas de digitalizações com samba, edite o arquivo smb.conf 
 ```console
@@ -142,6 +150,12 @@ Reiniciar CUPS
 sudo /etc/init.d/cups restart
 ```
 
+9 Identifique ID do container
+```console
+sudo docker ps
+```
+![Print2](contrib/dokkuprint2.png)
+
 15 Pegar IP do container e colocar no arquivo de hosts do servidor
 ```console
 sudo docker inspect <CONTAINER ID>
@@ -174,6 +188,6 @@ Exemplo:
 - Especifique o local da pasta raiz dos arquivos digitalizados.
     
     ```console
-    /var/lib/dokku/data/storage/jasmine/Digitalizacoes
+    /app/storage/Digitalizacoes
     ```
 

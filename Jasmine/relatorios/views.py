@@ -205,7 +205,7 @@ def imprimir(request):
     if platform.system() == 'Windows':
         path_wkthmltopdf = r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe'
     else:
-        path_wkthmltopdf = '/usr/bin/wkhtmltopdf'
+        path_wkthmltopdf = '/app/storage/wkhtmltopdf'
 
     try:
         config = pdfkit.configuration(wkhtmltopdf=path_wkthmltopdf)
