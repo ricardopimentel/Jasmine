@@ -172,6 +172,7 @@ Exemplo:
 - Acesse o menu Administração
 - Acesse Conf. de Digitalizações
 - Especifique o local da pasta raiz dos arquivos digitalizados.
+    
     ```console
     /var/lib/dokku/data/storage/jasmine/Digitalizacoes
     ```
