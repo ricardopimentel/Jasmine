@@ -100,7 +100,6 @@ sudo docker exec -it <CONTAINER ID> apt-get install ghostscript
 sudo docker exec -it <CONTAINER ID> apt-get install tesseract-ocr
 sudo docker exec -it <CONTAINER ID> wget https://gitlab.com/smkbarbosa/Jasmine/raw/master/contrib/por.traineddata
 sudo docker exec -it <CONTAINER ID> cp por.traineddata /usr/share/tesseract-ocr/tessdata/por.traineddata
-
 ```
 
 12 Compartilhar pastas de digitalizações com samba, edite o arquivo smb.conf 
