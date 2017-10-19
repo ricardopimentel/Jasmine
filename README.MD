@@ -10,8 +10,8 @@ Sistema de visualização de relatórios de impressões.
 
 1 Instalando Dokku
 ```console
-wget https://raw.githubusercontent.com/dokku/dokku/v0.7.2/bootstrap.sh
-sudo DOKKU_TAG=v0.7.2 bash bootstrap.sh
+wget https://raw.githubusercontent.com/dokku/dokku/v0.10.5/bootstrap.sh
+sudo DOKKU_TAG=v0.10.5 bash bootstrap.sh
 ```
 
 2 Gerar chave ssh (Aceite as três opções pedidas por default. Não inserir password)
@@ -45,7 +45,7 @@ dokku config:set jasmine DEBUG='False'
 dokku config:set jasmine SECRET_KEY='sua secret_key'
 ```
 
-8 Clone o repositório, no final será aprsentado o endereço para acessar a aplicação
+8 Clone o repositório, no final será apresentado o endereço para acessar a aplicação
 ```console
 sudo dokku plugin:install https://github.com/crisward/dokku-clone.git clone
 dokku clone jasmine https://gitlab.com/smkbarbosa/Jasmine.git
@@ -67,7 +67,6 @@ sudo mkdir -p  "/var/lib/dokku/data/storage/jasmine/Digitalizacoes/temp/"
 sudo chown -R dokku:dokku /var/lib/dokku/data/storage/jasmine
 sudo chmod -R 777 /var/lib/dokku/data/storage/jasmine/
 dokku storage:mount jasmine /var/lib/dokku/data/storage/jasmine:/app/storage
-dokku ps:rebuild jasmine
 ```
 
 Exemplo:
@@ -88,18 +87,15 @@ wget https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.4/wkhtmlt
 sudo tar -Jxf wkhtmltox-0.12.4_linux-generic-amd64.tar.xz
 sudo cp wkhtmltox/bin/wkhtmltopdf "/var/lib/dokku/data/storage/jasmine/wkhtmltopdf"
 
+sudo dokku plugin:install https://github.com/F4-Group/dokku-apt
 
+sudo wget https://gitlab.com/smkbarbosa/Jasmine/raw/master/contrib/por.traineddata
+sudo cp por.traineddata /usr/share/tesseract-ocr/tessdata/por.traineddata
+sudo mkdir -p  "/var/lib/dokku/data/storage/jasmine/tesseract"
+sudo cp /usr/bin/tesseract "/var/lib/dokku/data/storage/jasmine/tesseract"
+dokku storage:mount jasmine /usr/share/tesseract-ocr/tessdata:/usr/share/tesseract-ocr/tessdata
 
-
-
-
-
-
-sudo docker exec -it <CONTAINER ID> apt-get update
-sudo docker exec -it <CONTAINER ID> apt-get install ghostscript
-sudo docker exec -it <CONTAINER ID> apt-get install tesseract-ocr
-sudo docker exec -it <CONTAINER ID> wget https://gitlab.com/smkbarbosa/Jasmine/raw/master/contrib/por.traineddata
-sudo docker exec -it <CONTAINER ID> cp por.traineddata /usr/share/tesseract-ocr/tessdata/por.traineddata
+dokku ps:rebuild jasmine
 ```
 
 12 Compartilhar pastas de digitalizações com samba, edite o arquivo smb.conf 
