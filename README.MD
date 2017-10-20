@@ -89,11 +89,6 @@ sudo cp wkhtmltox/bin/wkhtmltopdf "/var/lib/dokku/data/storage/jasmine/wkhtmltop
 
 sudo dokku plugin:install https://github.com/F4-Group/dokku-apt
 
-sudo wget https://gitlab.com/smkbarbosa/Jasmine/raw/master/contrib/por.traineddata
-sudo mkdir -p  "/var/lib/dokku/data/storage/jasmine/tesseract"
-sudo cp por.traineddata "/var/lib/dokku/data/storage/jasmine/tesseract"
-dokku storage:mount jasmine /usr/share/tesseract-ocr/tessdata:/usr/share/tesseract-ocr/tessdata
-
 dokku ps:rebuild jasmine
 ```
 
