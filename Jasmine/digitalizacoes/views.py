@@ -1,14 +1,11 @@
 import os
 import shutil
-import pypdfocr.pypdfocr as OCR
+import pypdfocr.pypdfocr.pypdfocr as OCR
 import sys
-import glob
-
-import datetime
 from django.contrib import messages
 from django.http import HttpResponse
 from django.shortcuts import render, resolve_url as r, redirect
-from Jasmine.core.models import config, logs
+from Jasmine.core.models import config
 
 
 def digitalizacoes(request, u_printer, u_filename, u_action):
