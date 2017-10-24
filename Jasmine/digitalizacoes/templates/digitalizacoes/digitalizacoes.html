@@ -151,7 +151,7 @@
 													<div class="dropdown">
 														<span><img src="{% static 'images/more24.png' %}" alt="" /></span>
 													    <div class="dropdown-content">
-															<div class="dropdown-content-item"><img src="{% static 'images/makepdf24.png' %}"><a onclick="mostrar('modal_fullscreen')" href="/jasmine/convert/{{printer}}/{{file}}">Tornar Pesquisável</a></div>
+															<div class="dropdown-content-item"><img src="{% static 'images/makepdf24.png' %}"><a href="/jasmine/convert/{{printer}}/{{file}}">Tornar Pesquisável</a></div>
 														</div>
 													</div>
 												{% endif %}
@@ -223,6 +223,11 @@
 		{%if comprimir%}
 			<script>mostrar('modal_fullscreen1');</script>
 			<meta http-equiv="refresh" content="4; url=/jasmine/compress/{{printer}}/{{arquivo}}">
+		{%endif%}
+
+        {%if converter%}
+			<script>mostrar('modal_fullscreen');</script>
+            <meta http-equiv="refresh" content="20; url=/jasmine/verificarocr/{{printer}}/{{arquivo}}">
 		{%endif%}
 
 		{% if messages %}

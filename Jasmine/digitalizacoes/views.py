@@ -1,6 +1,8 @@
 import os
 import shutil
-import pypdfocr.pypdfocr as OCR
+import threading
+
+import pypdfocr.pypdfocr.pypdfocr as OCR
 import sys
 from django.contrib import messages
 from django.http import HttpResponse
@@ -98,44 +100,18 @@ def remover_arquivo(request, filename, printer, raiz, list_files):
 
 
 def ocr(request, u_printer, u_filename):
-    '''Extrai texto das imagem do pdf e as adiciona em uma camada trasparente sobre a imagem original'''
     raiz = (config.objects.get(id=1)).pasta_dig
-    if raiz:
-        try:
-            # passa o local do arquivo que será convertido pegando a raiz do banco de dados e concatenando com a impressora e nome do arquivo
-            arquivo_original = os.path.join(raiz + '/' + u_printer, u_filename)
-            arquivo_destino = os.path.join(raiz + '/temp/' + u_filename)
-            pasta_temp = os.path.join(raiz + '/temp/')
 
-            #copiando arquivo para pasta temporária
-            shutil.copy2(arquivo_original, pasta_temp)
-
-            # Iniciando classe OCR
-            ocr = OCR.PyPDFOCR()
-
-            # adiciona um sufixo ao nome do arquivo
-            out_filename = arquivo_destino.replace(".pdf", "_ocr.pdf")
-
-            # caso já exista um arquivo com o nome do que será gerado, ele é excluido antes da conversão
-            if os.path.exists(out_filename):
-                os.remove(out_filename)  # removendo arquivo
-
-            opts = [str(arquivo_destino), '-l por']
-
-            # convertendo
-            ocr.go(opts)
-            msg = "Arquivo '" + u_filename.replace(".pdf", "_ocr.pdf") + "' gerado com sucesso!"
-
-        except:
-            msg = 'Erro ao converter arquivo/n' + str(sys.exc_info())
-            raise
+    t = threading.Thread(target=gerarpdf, args=(request, u_printer, u_filename, raiz), kwargs={})
+    t.setDaemon(True)
+    t.start()
 
     return render(request, 'digitalizacoes/digitalizacoes.html', {
         'title': 'Documentos Escaneados',
-        'redirect': msg,
+        'converter': 'converter',
         'printer': u_printer,
-        'comprimir': 'comprimir',
-        'arquivo': u_filename.replace(".pdf", "_ocr.pdf"),
+        'arquivo': u_filename,
+        'raiz': raiz,
     })
 
 
@@ -149,7 +125,6 @@ def compress(request, u_printer, u_filename):
         msg = ''
 
         msg = os.system("gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/ebook -dNOPAUSE -dQUIET -dBATCH -sOutputFile=%s %s" % (output, path_arquivo))
-        os.remove(path_arquivo)
 
         if msg:
             messages.error(request, "Erro ao compactar o arquivo")
@@ -157,8 +132,69 @@ def compress(request, u_printer, u_filename):
             # copiando arquivo criado para a pasta original
             shutil.copy2(output, pasta_original)
             messages.success(request, 'Arquivo "compacto-' + u_filename + '" Gerado com sucesso')
+
+        os.remove(path_arquivo)
+        print(path_arquivo)
+        os.remove(output)
+        print(output)
     except:
         model = ''
         messages.error(request, sys.exc_info())
 
     return redirect(r('digitalizacoes', u_printer=u_printer, u_filename='*file*', u_action='*action*'))
+
+
+def gerarpdf(request, u_printer, u_filename, raiz):
+    '''Extrai texto das imagem do pdf e as adiciona em uma camada trasparente sobre a imagem original'''
+
+    try:
+        # passa o local do arquivo que será convertido pegando a raiz do banco de dados e concatenando com a impressora e nome do arquivo
+        arquivo_original = os.path.join(raiz + '/' + u_printer, u_filename)
+        arquivo_destino = os.path.join(raiz + '/temp/' + u_filename)
+        pasta_temp = os.path.join(raiz + '/temp/')
+
+        # copiando arquivo para pasta temporária
+        shutil.copy2(arquivo_original, pasta_temp)
+
+        # Iniciando classe OCR
+        ocr = OCR.PyPDFOCR()
+
+        # adiciona um sufixo ao nome do arquivo
+        out_filename = arquivo_destino.replace(".pdf", "_ocr.pdf")
+
+        # caso já exista um arquivo com o nome do que será gerado, ele é excluido antes da conversão
+        if os.path.exists(out_filename):
+            os.remove(out_filename)  # removendo arquivo
+
+        opts = [str(arquivo_destino), '-l por']
+
+        # convertendo
+        ocr.go(opts)
+
+        print('\nTerminado\n')
+    except:
+        messages.error(request, sys.exc_info())
+        return redirect(r('digitalizacoes', u_printer=u_printer, u_filename='*file*', u_action='*action*'))
+
+
+def verificarocr(request, u_printer, u_filename):
+    raiz = (config.objects.get(id=1)).pasta_dig
+    pasta_temp = os.path.join(raiz + '/temp/')
+    arquivo = u_filename.replace(".pdf", "_ocr.pdf")
+    path_arquivo = pasta_temp + arquivo
+
+    if os.path.isfile(path_arquivo):
+        return render(request, 'digitalizacoes/digitalizacoes.html', {
+            'title': 'Documentos Escaneados',
+            'comprimir': 'comprimir',
+            'printer': u_printer,
+            'arquivo': arquivo,
+        })
+    else:
+        return render(request, 'digitalizacoes/digitalizacoes.html', {
+            'title': 'Documentos Escaneados',
+            'converter': 'converter',
+            'printer': u_printer,
+            'arquivo': u_filename,
+            'raiz': raiz,
+        })
