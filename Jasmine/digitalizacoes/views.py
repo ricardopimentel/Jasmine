@@ -2,7 +2,7 @@ import os
 import shutil
 import threading
 
-import pypdfocr.pypdfocr as OCR
+import pypdfocr.pypdfocr.pypdfocr as OCR
 import sys
 from django.contrib import messages
 from django.http import HttpResponse
@@ -116,32 +116,19 @@ def ocr(request, u_printer, u_filename):
 
 
 def compress(request, u_printer, u_filename):
-    try:
-        raiz = (config.objects.get(id=1)).pasta_dig
-        pasta_original = os.path.join(raiz + '/' + u_printer)
-        pasta_temp = os.path.join(raiz + '/temp/')
-        output = pasta_temp + "compacto-"+u_filename
-        path_arquivo = pasta_temp + u_filename
-        msg = ''
+    raiz = (config.objects.get(id=1)).pasta_dig
 
-        msg = os.system("gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/ebook -dNOPAUSE -dQUIET -dBATCH -sOutputFile=%s %s" % (output, path_arquivo))
+    t = threading.Thread(target=comprimir, args=(request, u_printer, u_filename, raiz), kwargs={})
+    t.setDaemon(True)
+    t.start()
 
-        if msg:
-            messages.error(request, "Erro ao compactar o arquivo")
-        else:
-            # copiando arquivo criado para a pasta original
-            shutil.copy2(output, pasta_original)
-            messages.success(request, 'Arquivo "compacto-' + u_filename + '" Gerado com sucesso')
-
-        os.remove(path_arquivo)
-        print(path_arquivo)
-        os.remove(output)
-        print(output)
-    except:
-        model = ''
-        messages.error(request, sys.exc_info())
-
-    return redirect(r('digitalizacoes', u_printer=u_printer, u_filename='*file*', u_action='*action*'))
+    return render(request, 'digitalizacoes/digitalizacoes.html', {
+        'title': 'Documentos Escaneados',
+        'comprimir': 'comprimir',
+        'printer': u_printer,
+        'arquivo': u_filename,
+        'raiz': raiz,
+    })
 
 
 def gerarpdf(request, u_printer, u_filename, raiz):
@@ -184,12 +171,7 @@ def verificarocr(request, u_printer, u_filename):
     path_arquivo = pasta_temp + arquivo
 
     if os.path.isfile(path_arquivo):
-        return render(request, 'digitalizacoes/digitalizacoes.html', {
-            'title': 'Documentos Escaneados',
-            'comprimir': 'comprimir',
-            'printer': u_printer,
-            'arquivo': arquivo,
-        })
+        return redirect(r('digitalizacoes_compress', u_printer=u_printer, u_filename=u_filename))
     else:
         return render(request, 'digitalizacoes/digitalizacoes.html', {
             'title': 'Documentos Escaneados',
@@ -198,3 +180,46 @@ def verificarocr(request, u_printer, u_filename):
             'arquivo': u_filename,
             'raiz': raiz,
         })
+
+
+def verificarcompress(request, u_printer, u_filename):
+    raiz = (config.objects.get(id=1)).pasta_dig
+    arquivo = "compacto-"+ u_filename.replace(".pdf", "_ocr.pdf")
+    path_arquivo = raiz+ '/'+ u_printer+ '/'+ arquivo
+
+    if os.path.isfile(path_arquivo):
+        return redirect(r('digitalizacoes', u_printer=u_printer, u_filename='*file*', u_action='*action*'))
+    else:
+        return render(request, 'digitalizacoes/digitalizacoes.html', {
+            'title': 'Documentos Escaneados',
+            'comprimir': 'comprimir',
+            'printer': u_printer,
+            'arquivo': u_filename,
+            'raiz': raiz,
+        })
+
+
+def comprimir(request, u_printer, u_filename, raiz):
+    u_filename = u_filename.replace(".pdf", "_ocr.pdf")
+    pasta_original = os.path.join(raiz + '/' + u_printer)
+    pasta_temp = os.path.join(raiz + '/temp/')
+    output = pasta_temp + "compacto-" + u_filename
+    path_arquivo = pasta_temp + u_filename
+    msg = ''
+
+    msg = os.system(
+        "gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/ebook -dNOPAUSE -dQUIET -dBATCH -sOutputFile=%s %s" % (
+        output, path_arquivo))
+
+    if msg:
+        messages.error(request, "Erro ao compactar o arquivo")
+    else:
+        # copiando arquivo criado para a pasta original
+        shutil.copy2(output, pasta_original)
+        messages.success(request, 'Arquivo "compacto-' + u_filename + '" Gerado com sucesso')
+
+    os.remove(path_arquivo[0:-8] + '.pdf')
+    os.remove(path_arquivo)
+    os.remove(output)
+
+    print('\nFinalizada a compressão\n')

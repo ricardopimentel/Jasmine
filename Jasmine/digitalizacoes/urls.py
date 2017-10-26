@@ -6,5 +6,6 @@ urlpatterns = [
     url(r'^escaneados/(?P<u_printer>.+)/(?P<u_filename>.+)/(?P<u_action>.+)/$', views.digitalizacoes, name='digitalizacoes'),
     url(r'^convert/(?P<u_printer>.+)/(?P<u_filename>.+)$', views.ocr, name='digitalizacoes_ocr'),
     url(r'^verificarocr/(?P<u_printer>.+)/(?P<u_filename>.+)$', views.verificarocr, name='verificar_ocr'),
+    url(r'^verificarcompress/(?P<u_printer>.+)/(?P<u_filename>.+)$', views.verificarcompress, name='verificar_compress'),
     url(r'^compress/(?P<u_printer>.+)/(?P<u_filename>.+)$', views.compress, name='digitalizacoes_compress'),
 ]
