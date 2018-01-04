@@ -35,7 +35,7 @@ class conexaoAD(object):
         
     def Login(self):
         try:
-            with Connection(Server(self.endservidor, use_ssl=True),
+            with Connection(Server(self.endservidor, use_ssl=False),
                             auto_bind=AUTO_BIND_NO_TLS,
                             read_only=True,
                             check_names=True,
@@ -66,7 +66,7 @@ class conexaoAD(object):
         LDAP_USERNAME = Username+ '@'+ Dominio
         
         try:
-            with Connection(Server(Endservidor, use_ssl=True),
+            with Connection(Server(Endservidor, use_ssl=False),
                             auto_bind=AUTO_BIND_NO_TLS,
                             read_only=True,
                             check_names=True,
