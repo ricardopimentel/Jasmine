@@ -64,6 +64,8 @@ my $me = basename($0);
 
 # Lockfile: Critical to prevent this script to bring down the server !
 ## TODO: Look for a better place to create this lockfile, maybe /var/... ?
+
+#my $lockfile = $backends_dir."/".$me.".lock";
 my $lockfile ="/tmp/".$me.".lock";
 
 # Create a flag to store success or failure of the accounting, in order to prevent
@@ -447,7 +449,8 @@ else {
 
     # Here we log this print job in the database...
     my $dsn = "DBI:mysql:database=$DBdatabase;host=$DBhost";
-    my $dbh = DBI->connect($dsn, $DBlogin, $DBpassword, { mysql_enable_utf8 => 1 }) or log_failure ("  Couldn't connect to the MySQL server !");
+	my $dbh = DBI->connect($dsn, $DBlogin, $DBpassword, { mysql_enable_utf8 => 1 }) or log_failure ("  Couldn't connect to the MySQL server !");
+    #my $dbh = DBI->connect($dsn, $DBlogin, $DBpassword) or log_failure ("  Couldn't connect to the MySQL server !");
 	
 	#Set the ip of host
     my @options_split = split(/ /,$options);
@@ -459,11 +462,14 @@ else {
     #Change the title of network file printed
     $title =~ s/smbprn.?\d{8} Remote Downlevel Document //g;
     $title =~ s/smbprn.?\d{8}//g;
-	
-    # Escape the fields to be inserted
-    my @sqlArgs=map($dbh->quote($_), ($job_id, $printer,$user, $hostname, $title, $copies, $pg_count, $options, $doc, $host));
 		
-    my $query="INSERT INTO core_jobs_log (date, job_id, printer, user, server, title, copies,pages, options, doc, host)";
+    # Escape the fields to be inserted
+	my @sqlArgs=map($dbh->quote($_), ($job_id, $printer,$user, $hostname, $title, $copies, $pg_count, $options, $doc, $host));
+    #my @sqlArgs=map($dbh->quote($_), ($job_id, $printer,$user, $hostname, $title, $copies, $pg_count, $options, $doc));
+		
+	my $query="INSERT INTO core_jobs_log (date, job_id, printer, user, server, title, copies,pages, options, doc, host)";
+    #my $query="INSERT INTO jobs_log (date, job_id, printer, user, server, title, copies,pages, options, doc)";
+	
     $query.=" VALUES (now(), ".join (", ", @sqlArgs).")";
     $dbh->do($query) or do{
       # If the query fails, log it, and set the failure flag.

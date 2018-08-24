@@ -110,7 +110,7 @@ browseable = no
 Reinicie o Samba
 
 ```console
-sudo /etc/init.d/samba restart
+sudo /etc/init.d/smbd restart
 ```
 
 13 Executar as migrações
