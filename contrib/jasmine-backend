@@ -465,6 +465,7 @@ else {
 		
     my $query="INSERT INTO core_jobs_log (date, job_id, printer, user, server, title, copies,pages, options, doc, host)";
     $query.=" VALUES (now(), ".join (", ", @sqlArgs).")";
+	$dbh->do("SET time_zone='America/Araguaina';");
     $dbh->do($query) or do{
       # If the query fails, log it, and set the failure flag.
       $count_failure = 1;
