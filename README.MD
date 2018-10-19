@@ -2,6 +2,8 @@
 
 Sistema de visualização de relatórios de impressões.
 
+![Print1](contrib/serverrunning.png)
+
 ## Pré-requisitos
 - Ter instalado:
     - cups+jasmine ([Parte 1](https://sempreupdate.com.br/2016/10/como-instalar-uma-impressora-em-distribuicoes-baseadas-no-ubuntu-ou-fedora-parte-1.html) e [Parte 2](https://sempreupdate.com.br/2016/11/gerando-relatorios-de-impressao-parte-2.html))
