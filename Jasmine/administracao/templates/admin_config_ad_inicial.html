@@ -41,7 +41,7 @@
 		<h1>Configurações Iniciais</h1>
 		<h4>Desculpe, nós detectamos que alguns dados importantes estão faltando.</h4>
 		<div class="formulario">
-			<form method="post" action="/jasmine/login/"> {%csrf_token%}
+			<form method="post" action="{% url 'primeiro_acesso' %}"> {%csrf_token%}
 		 		{{form.as_p}}
 			   	<p><input type="submit" name="commit" value="Salvar" id="botao" ></p>
 			</form>

@@ -77,7 +77,7 @@
 	                var data = [                            
 						{%for item in top_users%}
 		                    {             
-		                    	value: {{item.soma|split1000}},
+		                    	value: {{item.soma}},
 		                        color:"{{cores_primarias|get_at_index:forloop.counter0}}",
 		                        highlight: "{{cores_secundarias|get_at_index:forloop.counter0}}",
 		                        label: "{{item.user}}"
@@ -115,7 +115,7 @@
 	                var data1 = [
 						{%for item in top_printers%}
 							{
-		                    	value: {{item.soma|split1000}},
+		                    	value: {{item.soma}},
 		                        color:"{{cores_primarias|get_at_index:forloop.counter0}}",
 		                        highlight: "{{cores_secundarias|get_at_index:forloop.counter0}}",
 		                        label: "{{item.printer}}"
@@ -155,7 +155,7 @@
 	                var data2 = [
 						{%for item in top_hosts%}
 		                    {             
-		                    	value: {{item.soma|split1000}},
+		                    	value: {{item.soma}},
 		                        color:"{{cores_primarias|get_at_index:forloop.counter0}}",
 		                        highlight: "{{cores_secundarias|get_at_index:forloop.counter0}}",
 		                        label: "{{item.host}}"

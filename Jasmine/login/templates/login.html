@@ -36,7 +36,7 @@
 	
 {%block conteudo%}
 	{% if request.session.userl %}
-		<meta http-equiv="refresh" content="0; url=/jasmine/">
+		<meta http-equiv="refresh" content="0; url={% url 'home' %}>
 	{% else %}
 		<div class="card">
 			<div class="Erro-form">
@@ -48,7 +48,7 @@
 			<h1>Faça Login</h1>
 			<br>
 			<div class="formulario">
-				<form method="post" action="/jasmine/login/"> {%csrf_token%}
+				<form method="post" action="{% url 'login' %}"> {%csrf_token%}
 			 		{{form.as_p}}
 				   	<p><input type="submit" name="commit" value="Entrar" id="botao" ></p>
 				</form>
