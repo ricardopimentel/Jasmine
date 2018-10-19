@@ -2,7 +2,7 @@
 
 Sistema de visualização de relatórios de impressões.
 
-![Print1](contrib/serverrunning.png)
+![Print1](contrib/serverrunning1.png)
 
 ## Pré-requisitos
 - Ter instalado:
