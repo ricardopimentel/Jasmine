@@ -1,6 +1,6 @@
 import datetime
 from django.db.models import Sum
-from django.shortcuts import render
+from django.shortcuts import render, resolve_url as r, redirect
 
 from Jasmine.core.models import jobs_log
 
@@ -32,3 +32,7 @@ def home(request, user_u, printer_u, host_u):
                        'cores_secundarias': cores_secundarias,
                        'itemselec': 'HOME',
                      })
+
+
+def redi(request):
+    return redirect(r('home', user_u='30', printer_u='30', host_u='30'))

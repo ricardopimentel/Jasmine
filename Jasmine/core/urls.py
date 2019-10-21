@@ -4,4 +4,5 @@ from Jasmine.core import views
 
 urlpatterns = [
     url(r'^home/(?P<user_u>.+)/(?P<printer_u>.+)/(?P<host_u>.+)/$', views.home, name='home'),
+    url(r'^$', views.redi, name='redirect'),
 ]
