@@ -51,13 +51,13 @@ class LoginForm(forms.Form):
                     self.request.session['usertip'] = 'admin'
                     # Preparar menu admin
                     self.request.session['menu'] = ['HOME', 'RELATÓRIOS', 'DIGITALIZAÇÕES', 'ADMINISTRAÇÃO', 'AJUDA']
-                    self.request.session['url'] = ['jasmine/30/30/30', 'jasmine/relatorio/*user*/*printer*/*host*/', 'jasmine/escaneados/*printer*/*file*/*action*', 'jasmine/admin', 'jasmine/ajuda/**topc**']
+                    self.request.session['url'] = ['jasmine/home/30/30/30', 'jasmine/relatorio/*user*/*printer*/*host*/', 'jasmine/escaneados/*printer*/*file*/*action*', 'jasmine/admin', 'jasmine/ajuda/**topc**']
                     self.request.session['img'] = ['home24.png', 'relatorio24.png', 'scan24.png', 'admin24.png', 'ajuda24.png']
                 else:
                     self.request.session['usertip'] = 'user'
                     # Preparar menu user
                     self.request.session['menu'] = ['HOME', 'RELATÓRIOS', 'DIGITALIZAÇÕES', 'AJUDA']
-                    self.request.session['url'] = ['jasmine/30/30/30', 'jasmine/relatorio/*user*/*printer*/*host*/', 'jasmine/escaneados/*printer*/*file*/*action*', 'jasmine/ajuda/**topc**']
+                    self.request.session['url'] = ['jasmine/home/30/30/30', 'jasmine/relatorio/*user*/*printer*/*host*/', 'jasmine/escaneados/*printer*/*file*/*action*', 'jasmine/ajuda/**topc**']
                     self.request.session['img'] = ['home24.png', 'relatorio24.png', 'scan24.png', 'ajuda24.png']
 
                 ret = ret.replace('[', '')
