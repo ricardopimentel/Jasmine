@@ -63,9 +63,15 @@
 		<meta http-equiv="refresh" content="0; url={% url 'login' %}">
 	{% else %}
 		<div class="card">
-			<img src="{% static 'images/user.png' %}" alt="" />
-			<h1>Top 5 Usuários</h1>
-			
+			<div class="card-titulo">
+				<img src="{% static 'images/user.png' %}" alt="" />
+				<h1>Top 5 Usuários</h1>
+			</div>
+			<div class="card-menu-container">
+                <a href="{% url 'home' user_u='5' printer_u=request.session.printer_u host_u=request.session.host_u %}" title="Dados dos ultimos 5 dias"> <div {% if request.session.user_u == '5' %} style="background: #ffa500;" {% endif %} class="card-menu"><img src="{% static 'images/5.png' %}"></div></a>
+                <a href="{% url 'home' user_u='10' printer_u=request.session.printer_u host_u=request.session.host_u %}" title="Dados dos ultimos 10 dias"><div {% if request.session.user_u == '10' %} style="background: #ffa500;" {% endif %} class="card-menu"><img src="{% static 'images/10.png' %}"></div></a>
+				<a href="{% url 'home' user_u='30' printer_u=request.session.printer_u host_u=request.session.host_u %}" title="Dados dos ultimos 30 dias"><div {% if request.session.user_u == '30' %} style="background: #ffa500;" {% endif %} class="card-menu"><img src="{% static 'images/30.png' %}"></div></a>
+            </div>
 			<div>
 				<canvas id="GraficoDonut" style="width:100%;"></canvas>
 	            <script type="text/javascript">
@@ -103,9 +109,15 @@
 		</div>
 
 		<div class="card">
-			<img src="{% static 'images/printer.png' %}" alt="" />
-			<h1>Top 5 Impressoras</h1>
-
+			<div class="card-titulo">
+				<img src="{% static 'images/printer.png' %}" alt="" />
+				<h1>Top 5 Impressoras</h1>
+			</div>
+			<div class="card-menu-container">
+                <a href="{% url 'home' user_u=request.session.user_u printer_u='5' host_u=request.session.host_u %}" title="Dados dos ultimos 5 dias"><div {% if request.session.printer_u == '5' %} style="background: #ffa500;" {% endif %} class="card-menu"><img src="{% static 'images/5.png' %}"></div></a>
+                <a href="{% url 'home' user_u=request.session.user_u printer_u='10' host_u=request.session.host_u %}" title="Dados dos ultimos 10 dias"><div {% if request.session.printer_u == '10' %} style="background: #ffa500;" {% endif %} class="card-menu"><img src="{% static 'images/10.png' %}"></div></a>
+				<a href="{% url 'home' user_u=request.session.user_u printer_u='30' host_u=request.session.host_u %}" title="Dados dos ultimos 30 dias"><div {% if request.session.printer_u == '30' %} style="background: #ffa500;" {% endif %} class="card-menu"><img src="{% static 'images/30.png' %}"></div></a>
+            </div>
 			<div>
 				<canvas id="GraficoDonut1" style="width:100%;"></canvas>
 	            <script type="text/javascript">
@@ -141,9 +153,15 @@
 		</div>
 		
 		<div class="card">
-			<img src="{% static 'images/host.png' %}" alt="" />
-			<h1>Top 5 IPs</h1>
-			
+			<div class="card-titulo">
+				<img src="{% static 'images/host.png' %}" alt="" />
+				<h1>Top 5 IPs</h1>
+			</div>
+			<div class="card-menu-container">
+                <a href="{% url 'home' user_u=request.session.user_u printer_u=request.session.printer_u host_u='5' %}" title="Dados dos ultimos 5 dias"><div {% if request.session.host_u == '5' %} style="background: #ffa500;" {% endif %} class="card-menu"><img src="{% static 'images/5.png' %}"></div></a>
+                <a href="{% url 'home' user_u=request.session.user_u printer_u=request.session.printer_u host_u='10' %}" title="Dados dos ultimos 10 dias"><div {% if request.session.host_u == '10' %} style="background: #ffa500;" {% endif %} class="card-menu"><img src="{% static 'images/10.png' %}"></div></a>
+				<a href="{% url 'home' user_u=request.session.user_u printer_u=request.session.printer_u host_u='30' %}" title="Dados dos ultimos 30 dias"><div {% if request.session.host_u == '30' %} style="background: #ffa500;" {% endif %} class="card-menu"><img src="{% static 'images/30.png' %}"></div></a>
+            </div>
 			<div>
 				<canvas id="GraficoDonut2" style="width:100%;"></canvas>
 	            <script type="text/javascript">
@@ -210,7 +228,7 @@
         }
     </script>
 
-    {% if messages %}
+	{% if messages %}
         <div class="msg-popup-container">
             {% for message in messages %}
                 <div id="{{ forloop.counter0 }}" class="msg-popup {{ message.tags }}">

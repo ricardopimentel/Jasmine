@@ -21,7 +21,7 @@ def login(request):
                 # Checa se os dados são válidos:
                 if form.is_valid():
                     # Caso o login seja concluído, redireciona para a HOME
-                    return redirect(r('home'))
+                    return redirect(r('home', user_u=30, printer_u=30, host_u=30))
             else:  # se não veio nada no post cria uma instancia vazia
                 form = LoginForm(request)
 
@@ -41,7 +41,7 @@ def logout(request):
         del request.session['url']
     except KeyError:
         print(sys.exc_info())
-    return redirect(r('home'))
+    return redirect(r('home', user_u=30, printer_u=30, host_u=30))
 
 def primeiroacesso(request):
     if request.method == 'POST':

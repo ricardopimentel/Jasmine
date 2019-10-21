@@ -1,11 +1,23 @@
+import datetime
 from django.db.models import Sum
 from django.shortcuts import render
+
 from Jasmine.core.models import jobs_log
 
-def home(request):
-    top_users = jobs_log.objects.values('user').annotate(soma=Sum('pages')).order_by('-soma')[0:5]
-    top_printers = jobs_log.objects.values('printer').annotate(soma=Sum('pages')).order_by('-soma')[0:5]
-    top_hosts = jobs_log.objects.values('host').annotate(soma=Sum('pages')).order_by('-soma')[0:5]
+def home(request, user_u, printer_u, host_u):
+    hoje = datetime.datetime.today()
+
+    user_data_inicial = datetime.datetime.fromordinal(hoje.toordinal() - int(user_u))
+    printer_data_inicial = datetime.datetime.fromordinal(hoje.toordinal() - int(printer_u))
+    host_data_inicial = datetime.datetime.fromordinal(hoje.toordinal() - int(host_u))
+
+    request.session['user_u'] = user_u
+    request.session['printer_u'] = printer_u
+    request.session['host_u'] = host_u
+
+    top_users = jobs_log.objects.filter(date__range=[user_data_inicial, hoje]).values('user').annotate(soma=Sum('pages')).order_by('-soma')[0:5]
+    top_printers = jobs_log.objects.filter(date__range=[printer_data_inicial, hoje]).values('printer').annotate(soma=Sum('pages')).order_by('-soma')[0:5]
+    top_hosts = jobs_log.objects.filter(date__range=[host_data_inicial, hoje]).values('host').annotate(soma=Sum('pages')).order_by('-soma')[0:5]
 
     # Preparando cores dos gráficos
     cores_primarias = ['#FF3035', '#46BFBD', '#FDB45C', '#512DA8', '#C2185B']
