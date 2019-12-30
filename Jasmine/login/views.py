@@ -9,7 +9,7 @@ from Jasmine.core.models import config
 def login(request):
     try:  # Verificar se usuario esta logado
         if request.session['nome']:
-            return redirect(r('home'))
+            return redirect(r('home', user_u='30', printer_u='30', host_u='30'))
     except KeyError: # Se não estiver logado, prepara tela de login
         # Preparando menu
         set_menu_de_login(request)
