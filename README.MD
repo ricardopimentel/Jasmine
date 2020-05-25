@@ -128,7 +128,7 @@ DATABASE_URL: mysql://usuario:senha@host:porta/database
 
 15 Substituir o arquivo do backend do jasmine no cups e configurar banco de dados
 ```console
-wget https://gitlab.com/smkbarbosa/Jasmine/raw/master/contrib/jasmine-backend
+wget https://raw.githubusercontent.com/ricardopimentel/Jasmine/master/contrib/jasmine-backend
 sudo cp jasmine-backend /usr/lib/cups/backend/jasmine
 sudo chmod 755 /usr/lib/cups/backend/jasmine
 sudo chown root /usr/lib/cups/backend/jasmine
