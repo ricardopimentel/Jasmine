@@ -15,7 +15,7 @@ pathtools==0.1.2
 pdfkit==0.6.1
 Pillow==4.1.1
 pyasn1==0.2.3
-PyPDF2==1.26.0
+PyPDF2==1.27.5
 https://github.com/ricardopimentel/pypdfocr3/archive/master.zip
 python-decouple==3.0
 python3-ldap==0.9.8.4
