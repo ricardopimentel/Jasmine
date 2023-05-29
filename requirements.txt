@@ -1,3 +1,4 @@
+PyYAML==3.12
 argh==0.26.2
 dj-config-url==0.1.1
 dj-database-url==0.4.2
@@ -26,7 +27,6 @@ https://github.com/ricardopimentel/pypdfocr3/archive/master.zip
 python-decouple==3.0
 python3-ldap==0.9.8.4
 pytz==2017.2
-PyYAML==3.12
 reportlab==3.6.11
 requests==2.14.2
 requests-oauthlib==0.8.0
