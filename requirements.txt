@@ -3,12 +3,12 @@ dj-config-url==0.1.1
 dj-database-url==0.4.2
 dj-static==0.0.6
 Django==2.0
+https://github.com/evernote/evernote-sdk-python3/archive/master.zip
 django-filebrowser==4.0.1
 django-grappelli==3.0.3
 django-pagination-bootstrap==2.0.0
 django-tinymce==2.6.0
 django-tinymce-4==0.0.27
-evernote3==1.25.14
 gunicorn==19.7.1
 httplib2==0.20.4
 mysqlclient==2.1.1
@@ -22,7 +22,7 @@ psycopg2==2.9.3
 pyasn1==0.2.3
 pyparsing==3.0.9
 PyPDF2==1.26.0
-pypdfocr==0.9.1
+https://github.com/ricardopimentel/pypdfocr3/archive/master.zip
 python-decouple==3.0
 python3-ldap==0.9.8.4
 pytz==2017.2
