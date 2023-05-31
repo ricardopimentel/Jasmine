@@ -2,8 +2,11 @@
 # encoding: iso-8859-1
 # encoding: win-1252
 import sys
-from ldap3 import Server, Connection, AUTO_BIND_NO_TLS, SUBTREE, ALL_ATTRIBUTES
-from ldap3.core.exceptions import LDAPInvalidCredentialsResult
+
+from ldap3 import Connection
+from ldap3 import AUTO_BIND_NO_TLS
+from ldap3 import SUBTREE
+from ldap3 import Server
 
 from Jasmine.core.models import config
 
@@ -88,20 +91,20 @@ class conexaoAD(object):
                 print(sys.exc_info())
                 return 'n'  # Servidor não encotrado
     
-    def TestarCredenciais(self): # desconsiderar metodo, apenas testes
-        try:
-            # build a client
-            ldap_client = ldap.initialize(self.LDAP_SERVER)
-            # perform a synchronous bind
-            ldap_client.set_option(ldap.OPT_REFERRALS, 0)
-            ldap_client.simple_bind_s(self.LDAP_USERNAME, self.LDAP_PASSWORD)
-            ldap_client.unbind()
-            return 's'
-        except ldap.INVALID_CREDENTIALS:
-            ldap_client.unbind()
-            return 'i'
-        except ldap.SERVER_DOWN:
-            return 'n'
+    #def TestarCredenciais(self): # desconsiderar metodo, apenas testes
+    #    try:
+    #        # build a client
+    #        ldap_client = ldap.initialize(self.LDAP_SERVER)
+    #        # perform a synchronous bind
+    #        ldap_client.set_option(ldap.OPT_REFERRALS, 0)
+    #        ldap_client.simple_bind_s(self.LDAP_USERNAME, self.LDAP_PASSWORD)
+    #        ldap_client.unbind()
+    #        return 's'
+    #    except ldap.INVALID_CREDENTIALS:
+    #        ldap_client.unbind()
+    #        return 'i'
+    #    except ldap.SERVER_DOWN:
+    #        return 'n'
         # all is well
         # get all user groups and store it in cerrypy session for future use
         #cherrypy.session[username] = str(ldap_client.search_s(base_dn, ldap.SCOPE_SUBTREE, ldap_filter, attrs)[0][1]['memberOf'])

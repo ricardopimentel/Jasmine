@@ -36,14 +36,14 @@ ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
+    'django.contrib.sites',
+    'django.contrib.redirects',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_pagination_bootstrap',
-    'django.contrib.sites',
-    'django.contrib.redirects',
     'Jasmine.core',
     'Jasmine.digitalizacoes',
     'Jasmine.administracao',
@@ -63,14 +63,6 @@ MIDDLEWARE = [
     'pagination_bootstrap.middleware.PaginationMiddleware',
 ]
 
-TEMPLATE_CONTEXT_PROCESSORS = (
-    "django.contrib.auth.context_processors.auth",
-    "django.core.context_processors.debug",
-    "django.core.context_processors.i18n",
-    "django.core.context_processors.media",
-    "django.core.context_processors.request",
-)
-
 ROOT_URLCONF = 'Jasmine.urls'
 
 TEMPLATES = [
@@ -79,9 +71,6 @@ TEMPLATES = [
         'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
-            'builtins': [
-                'Jasmine.core.templatetags.impressoras_extras',
-            ],
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
