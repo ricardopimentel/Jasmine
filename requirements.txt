@@ -20,7 +20,7 @@ pathtools==0.1.2
 pdfkit==0.6.1
 Pillow==9.2.0
 psycopg2==2.9.3
-pyasn1==1.6.1
+pyasn1
 pyparsing==3.0.9
 PyPDF2==1.26.0
 https://github.com/ricardopimentel/pypdfocr3/archive/master.zip
