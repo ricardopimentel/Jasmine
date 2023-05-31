@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'pagination_bootstrap',
+    'django_pagination_bootstrap',
     'django.contrib.sites',
     'django.contrib.redirects',
     'Jasmine.core',
@@ -51,7 +51,7 @@ INSTALLED_APPS = [
     'Jasmine.relatorios'
 ]
 
-MIDDLEWARE_CLASSES = [
+MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
