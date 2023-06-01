@@ -28,7 +28,7 @@ pyasn==1.6.1
 pyasn1==0.5.0
 pyparsing==3.0.9
 PyPDF2==1.26.0
-https://github.com/ricardopimentel/pypdfocr3/archive/master.zip
+https://github.com/ricardopimentel/pypdfocr/archive/refs/heads/master.zip
 python-decouple==3.0
 pytz==2017.2
 PyYAML==6.0
