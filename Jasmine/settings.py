@@ -43,12 +43,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django_pagination_bootstrap',
+    'bootstrap_pagination',
     'Jasmine.core',
     'Jasmine.digitalizacoes',
     'Jasmine.administracao',
     'Jasmine.login',
-    'Jasmine.relatorios'
+    'Jasmine.relatorios',
 ]
 
 MIDDLEWARE = [
@@ -60,7 +60,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'pagination_bootstrap.middleware.PaginationMiddleware',
 ]
 
 ROOT_URLCONF = 'Jasmine.urls'
