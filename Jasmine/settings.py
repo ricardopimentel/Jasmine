@@ -51,16 +51,15 @@ INSTALLED_APPS = [
     'Jasmine.relatorios'
 ]
 
-MIDDLEWARE_CLASSES = [
+MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'pagination_bootstrap.middleware.PaginationMiddleware',
+    'django_pagination_bootstrap.middleware.PaginationMiddleware',
 ]
 
 TEMPLATE_CONTEXT_PROCESSORS = (

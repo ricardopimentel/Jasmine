@@ -3,7 +3,7 @@ argh==0.26.2
 dj-config-url==0.1.1
 dj-database-url==0.4.2
 dj-static==0.0.6
-Django==2.0
+Django==4.2.1
 https://github.com/evernote/evernote-sdk-python3/archive/master.zip
 django-filebrowser==4.0.1
 django-grappelli==3.0.3
