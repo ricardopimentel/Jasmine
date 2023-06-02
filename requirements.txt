@@ -11,6 +11,7 @@ django-grappelli==3.0.3
 django-pagination-bootstrap==2.4.6
 django-tinymce==2.6.0
 django-tinymce-4==0.0.27
+https://github.com/
 https://github.com/evernote/evernote-sdk-python3/archive/master.zip
 gunicorn==20.1.0
 httplib2==0.20.4
