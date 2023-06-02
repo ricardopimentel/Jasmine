@@ -11,7 +11,7 @@ django-grappelli==3.0.3
 django-pagination-bootstrap==2.4.6
 django-tinymce==2.6.0
 django-tinymce-4==0.0.27
-evernote3
+https://github.com/evernote/evernote-sdk-python3/archive/master.zip
 gunicorn==20.1.0
 httplib2==0.20.4
 idna==3.4
@@ -28,7 +28,7 @@ pyasn==1.6.1
 pyasn1==0.5.0
 pyparsing==3.0.9
 PyPDF2==1.26.0
-https://github.com/ricardopimentel/pypdfocr/archive/master.zip
+https://github.com/ricardopimentel/pypdfocr3/archive/master.zip
 python-decouple==3.0
 pytz==2017.2
 PyYAML==6.0
