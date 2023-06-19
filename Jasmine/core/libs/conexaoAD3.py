@@ -35,7 +35,8 @@ class conexaoAD(object):
         self.LDAP_USERNAME = self.username+ '@'+ self.dominio
         # sua senha
         self.LDAP_PASSWORD = self.password
-        
+
+
     def Login(self):
         try:
             with Connection(Server(self.endservidor, use_ssl=False),
@@ -44,7 +45,6 @@ class conexaoAD(object):
                             check_names=True,
                             user=self.LDAP_USERNAME, password=self.password) as c:
                 user_filter = '(&' + self.filter + '(|(name=%s)))' % self.username
-                print(user_filter)
                 c.search(search_base=self.base, search_filter=user_filter, search_scope=SUBTREE, attributes=['displayName', 'memberof'], get_operational_attributes=False)
 
             #print(c.response_to_json())
@@ -54,13 +54,16 @@ class conexaoAD(object):
                 return res[0]['attributes']
             else:
                 return 'o'  # Usuario fora do escopo permitido
-
         except:
             if 'invalidCredentials' in str(sys.exc_info()):
                 return 'i'  # Credenciais Invalidas
             elif 'LDAPSocketOpenError' in str(sys.exc_info()):
                 print(sys.exc_info())
                 return 'n'  # Servidor não encotrado
+            else:
+                print(sys.exc_info())
+                print("\n\n\nto aki\n\n\n")
+
 
     def PrimeiroLogin(self, Username, Password, Dominio, Endservidor, Filtro):
         # servidor ad

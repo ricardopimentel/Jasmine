@@ -31,7 +31,10 @@ class LoginForm(forms.Form):
             # Cria Conexão LDAP ou = 'OU=ca-paraiso, OU=reitoria, OU=ifto, DC=ifto, DC=local'
             c = conexaoAD(usuario, senha, ou, filter)
             result = c.Login() #tenta login no ldap
-            if(result == ('i')): # Credenciais invalidas
+            if(result == None):
+                # Adiciona erro na validação do formulário
+                raise forms.ValidationError("Erro de login")
+            elif(result == ('i')): # Credenciais invalidas
                 # Adiciona erro na validação do formulário
                 raise forms.ValidationError("Usuário ou senha incorretos")
             elif(result == ('n')): # Server Down
@@ -39,7 +42,6 @@ class LoginForm(forms.Form):
                 raise forms.ValidationError("Servidor AD não encontrado", code='invalid')
             elif(result == ('o')): # Usuario fora do escopo permitido
                 # Adiciona erro na validação do formulário
-                print('antes')
                 raise forms.ValidationError("Usuário não tem permissão para acessar essa página", code='invalid')
             else: # se logou
                 # Retirar virgulas do member of

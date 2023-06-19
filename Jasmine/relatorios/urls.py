@@ -1,8 +1,9 @@
-from django.conf.urls import url, include
+
+from django.urls import re_path
 
 from Jasmine.relatorios import views
 
 urlpatterns = [
-    url(r'^relatorio/(?P<user_u>.+)/(?P<printer_u>.+)/(?P<host_u>.+)/$', views.relatorios, name='relatorios_impressoes'),
-    url(r'^print/$', views.imprimir, name='relatorios_impressoes_pdf'),
+    re_path(r'^relatorio/(?P<user_u>.+)/(?P<printer_u>.+)/(?P<host_u>.+)/$', views.relatorios, name='relatorios_impressoes'),
+    re_path(r'^print/$', views.imprimir, name='relatorios_impressoes_pdf'),
 ]

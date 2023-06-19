@@ -1,10 +1,11 @@
-from django.conf.urls import url, include
+from django.conf.urls import include
+from django.urls import re_path
 
 urlpatterns = [
-    url(r'^tinymce/', include('tinymce.urls')),
-    url(r'^jasmine/', include('Jasmine.core.urls')),
-    url(r'^jasmine/', include('Jasmine.digitalizacoes.urls')),
-    url(r'^jasmine/', include('Jasmine.administracao.urls')),
-    url(r'^jasmine/', include('Jasmine.login.urls')),
-    url(r'^jasmine/', include('Jasmine.relatorios.urls')),
+    re_path(r'^tinymce/', include('tinymce.urls')),
+    re_path(r'^jasmine/', include('Jasmine.core.urls')),
+    re_path(r'^jasmine/', include('Jasmine.digitalizacoes.urls')),
+    re_path(r'^jasmine/', include('Jasmine.administracao.urls')),
+    re_path(r'^jasmine/', include('Jasmine.login.urls')),
+    re_path(r'^jasmine/', include('Jasmine.relatorios.urls')),
 ]
