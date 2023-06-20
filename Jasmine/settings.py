@@ -84,7 +84,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'Jasmine.wsgi.application'
-
+CSRF_TRUSTED_ORIGINS = ['https://campusparaiso.ifto.edu.br']
 
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
