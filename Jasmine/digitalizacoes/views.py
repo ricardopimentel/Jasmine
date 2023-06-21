@@ -2,7 +2,7 @@ import os
 import shutil
 import threading
 
-from pypdfocr import pypdfocr as O
+from pypdfocr import pypdfocr as OCR
 import sys
 from django.contrib import messages
 from django.http import HttpResponse
